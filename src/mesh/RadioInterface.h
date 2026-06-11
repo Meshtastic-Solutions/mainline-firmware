@@ -92,15 +92,20 @@ class RadioInterface
     uint8_t sf = 9;
     uint8_t cr = 5;
 
-    const uint8_t NUM_SYM_CAD = 2;       // Number of symbols used for CAD, 2 is the default since RadioLib 6.3.0 as per AN1200.48
-    const uint8_t NUM_SYM_CAD_24GHZ = 4; // Number of symbols used for CAD in 2.4 GHz, 4 is recommended in AN1200.22 of SX1280
+    static constexpr uint8_t NUM_SYM_CAD =
+        2; // Number of symbols used for CAD, 2 is the default since RadioLib 6.3.0 as per AN1200.48
+    static constexpr uint8_t NUM_SYM_CAD_24GHZ =
+        4; // Number of symbols used for CAD in 2.4 GHz, 4 is recommended in AN1200.22 of SX1280
     uint32_t slotTimeMsec = computeSlotTimeMsec();
-    uint16_t preambleLength = 16;    // 8 is default, but we use longer to increase the amount of sleep time when receiving
-    uint32_t preambleTimeMsec = 165; // calculated on startup, this is the default for LongFast
-    const uint32_t PROCESSING_TIME_MSEC =
-        4500;                // time to construct, process and construct a packet again (empirically determined)
-    const uint8_t CWmin = 3; // minimum CWsize
-    const uint8_t CWmax = 8; // maximum CWsize
+    uint16_t preambleLength = 16; // 8 is default, but we use longer to increase the amount of sleep time when receiving
+    static constexpr uint16_t preambleLengthDefault =
+        16; // 8 is default, but we use longer to increase the amount of sleep time when receiving
+    static constexpr uint16_t wideLoraPreambleLengthDefault = 12; // 12 is default for wide Lora
+    uint32_t preambleTimeMsec = 165;                              // calculated on startup, this is the default for LongFast
+    static constexpr uint32_t PROCESSING_TIME_MSEC =
+        4500;                           // time to construct, process and construct a packet again (empirically determined)
+    static constexpr uint8_t CWmin = 3; // minimum CWsize
+    static constexpr uint8_t CWmax = 8; // maximum CWsize
 
     meshtastic_MeshPacket *sendingPacket = NULL; // The packet we are currently sending
     uint32_t lastTxStart = 0L;
@@ -127,7 +132,7 @@ class RadioInterface
      * Coerce LoRa config fields (bandwidth/spread_factor) derived from presets.
      * This is used during early bootstrapping so UIs that display these fields directly remain consistent.
      */
-    static void bootstrapLoRaConfigFromPreset(meshtastic_Config_LoRaConfig &loraConfig);
+    // static void bootstrapLoRaConfigFromPreset(meshtastic_Config_LoRaConfig &loraConfig); // maybe superseded?
 
     /**
      * Return true if we think the board can go to sleep (i.e. our tx queue is empty, we are not sending or receiving)
@@ -137,6 +142,10 @@ class RadioInterface
     virtual bool canSleep() { return true; }
 
     virtual bool wideLora() { return false; }
+
+    /// Whether the radio can tune sub-GHz bands. False for 2.4 GHz-only chips (SX128x);
+    /// multiband chips like the LR1121 keep the default.
+    virtual bool supportsSubGhz() { return true; }
 
     /// Prepare hardware for sleep.  Call this _only_ for deep sleep, not needed for light sleep.
     virtual bool sleep() { return true; }
@@ -234,6 +243,30 @@ class RadioInterface
     // Whether we use the default frequency slot given our LoRa config (region and modem preset)
     static bool uses_default_frequency_slot;
 
+    // Whether we have a custom channel name
+    static bool uses_custom_channel_name;
+
+    static bool checkOrClampConfigLora(meshtastic_Config_LoRaConfig &loraConfig, bool clamp);
+
+    // Check if a candidate region is compatible and valid, with no side effects (safe for
+    // speculative UI checks). errBuf, if given, receives the failure reason.
+    static bool checkConfigRegion(const meshtastic_Config_LoRaConfig &loraConfig, char *errBuf = nullptr, size_t errLen = 0);
+
+    // Check if a candidate region is compatible and valid. On failure, logs at ERROR,
+    // records a critical error, and sends a client notification.
+    static bool validateConfigRegion(const meshtastic_Config_LoRaConfig &loraConfig);
+
+    // Check if a candidate radio configuration is valid.
+    static bool validateConfigLora(const meshtastic_Config_LoRaConfig &loraConfig);
+
+    // Make a candidate radio configuration valid, even if it isn't.
+    static void clampConfigLora(meshtastic_Config_LoRaConfig &loraConfig);
+
+    // If preset is locked to a sibling of currentRegion among the swappable EU regions
+    // (EU_868/EU_866/EU_N_868), return the sibling region owning the preset, else nullptr.
+    static const RegionInfo *regionSwapForPreset(meshtastic_Config_LoRaConfig_RegionCode currentRegion,
+                                                 meshtastic_Config_LoRaConfig_ModemPreset preset);
+
   protected:
     int8_t power = 17; // Set by applyModemConfig()
 
@@ -263,6 +296,12 @@ class RadioInterface
      * Save the channel we selected for later reuse.
      */
     virtual void saveChannelNum(uint32_t savedChannelNum);
+
+    /**
+     * Get current RSSI reading from the radio.
+     * Returns 0 if not available.
+     */
+    virtual int16_t getCurrentRSSI() { return 0; }
 
   private:
     /**

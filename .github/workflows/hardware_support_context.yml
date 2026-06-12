@@ -1,0 +1,42 @@
+name: Refresh hardware support context
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - variants/**
+      - bin/generate_hardware_support_context.py
+      - .github/workflows/hardware_support_context.yml
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  refresh-context:
+    runs-on: ubuntu-latest
+    permissions: # Needed for peter-evans/create-pull-request.
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Regenerate hardware support context
+        run: python3 bin/generate_hardware_support_context.py
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: create-pull-request/hardware-support-context
+          labels: hardware-support
+          title: Refresh hardware support context inventory
+          commit-message: Regenerate hardware support context inventory
+          body: |
+            Automated regeneration of `docs/hardware-support-context.md` and
+            `docs/hardware-support-context.json` after variant changes landed on develop.
+
+            The JSON inventory is the machine-readable view consumed by
+            `bin/board_intake.py` and external hardware-support tooling.
+          add-paths: |
+            docs/hardware-support-context.md
+            docs/hardware-support-context.json

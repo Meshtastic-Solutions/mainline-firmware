@@ -1,0 +1,124 @@
+# Board bring-up agent — dispatched by Meshtastic Readyline (or manually).
+#
+# workflow_dispatch so it can run against the branch that carries the
+# hardware-support tooling: the dispatcher passes ref=<that branch> and GitHub
+# executes the workflow file AS IT EXISTS ON THAT REF. Note: a copy of this
+# file must also live on the default branch (develop) — GitHub only registers
+# dispatchable workflows from there; the develop copy is a registration stub.
+#
+# Required repo secrets:
+#   ANTHROPIC_API_KEY        org Console key (recommended for shared repo)
+#     — or —
+#   CLAUDE_CODE_OAUTH_TOKEN  personal Pro/Max token from `claude setup-token`
+#                            (usage bills to that person's subscription)
+#   READYLINE_SERVICE_TOKEN  bearer token matching Readyline's NUXT_SERVICE_TOKENS
+#
+# Note: PRs opened with the default GITHUB_TOKEN do not trigger other workflows
+# (CI on the draft PR). Push an empty commit or close/reopen to kick CI, or use
+# a GitHub App token instead.
+name: Board Bring-up Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_url:
+        description: Readyline board-packet URL (.zip)
+        required: true
+        type: string
+      device_name:
+        description: Device display name (context for the PR)
+        required: false
+        type: string
+        default: ""
+      environment_name:
+        description: Expected PlatformIO environment name
+        required: false
+        type: string
+        default: ""
+      readyline_device_url:
+        description: Link back to the Readyline device page
+        required: false
+        type: string
+        default: ""
+      requested_by:
+        description: Who triggered this (shown in the PR)
+        required: false
+        type: string
+        default: ""
+      pr_base:
+        description: Base branch for the draft PR (board branches root here)
+        required: false
+        type: string
+        default: develop
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: board-bringup-${{ inputs.environment_name || inputs.bundle_url }}
+  cancel-in-progress: false
+
+jobs:
+  bringup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout (dispatched ref)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Download board packet from Readyline
+        env:
+          READYLINE_SERVICE_TOKEN: ${{ secrets.READYLINE_SERVICE_TOKEN }}
+        run: |
+          mkdir -p /tmp/board-packet
+          curl -fsSL \
+            -H "Authorization: Bearer ${READYLINE_SERVICE_TOKEN}" \
+            -o /tmp/packet.zip \
+            "${{ inputs.bundle_url }}"
+          unzip -o /tmp/packet.zip -d /tmp/board-packet
+          echo "Packet contents:" && ls -laR /tmp/board-packet
+
+      - name: Set up Python + PlatformIO
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Run bring-up agent
+        uses: anthropics/claude-code-action@v1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          # Set exactly one of these two secrets on the repo.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            /board-bringup /tmp/board-packet
+
+            Context for this run:
+            - Device: ${{ inputs.device_name || 'see intake.json' }}
+            - Expected environment: ${{ inputs.environment_name || 'see intake.json' }}
+            - Requested by: ${{ inputs.requested_by || 'manual dispatch' }}
+            - Readyline device page: ${{ inputs.readyline_device_url || 'n/a' }}
+            - Root the board branch on the merge-base of origin/${{ inputs.pr_base }}
+              and upstream meshtastic/firmware develop, then open the draft PR
+              in this repo (Meshtastic-Solutions/mainline-firmware) with
+              --base ${{ inputs.pr_base }}, exactly as the command's
+              upstream-ready branch strategy describes. Do NOT open a PR
+              against meshtastic/firmware — upstream promotion is a human step.
+
+            This is an unattended CI run: follow the command's house rules
+            exactly, never invent pins, and finish with the PR URL.
+          claude_args: |
+            --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
+            --permission-mode acceptEdits

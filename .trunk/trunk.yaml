@@ -34,6 +34,12 @@ lint:
     - linters: [ALL]
       paths:
         - bin/**
+    # Generated machine-readable inventory (bin/generate_hardware_support_context.py).
+    # Emitted as deterministic json.dumps output; prettier's array-wrapping style
+    # would churn every regeneration for no reader benefit.
+    - linters: [ALL]
+      paths:
+        - docs/hardware-support-context.json
     # Fake-NodeDB fixture JSONL files contain deterministic synthetic
     # public_key_hex (64-char hex) values that gitleaks misidentifies as
     # generic-api-key. These are not secrets — they're test fixtures

@@ -9,15 +9,16 @@ This contract defines the minimum maintainer input and the expected workflow out
 ### Required Fields
 
 - `environment_name`: Proposed PlatformIO environment name for the new board.
-- `hardware_model`: Meshtastic hardware model identifier to assign.
+- `hardware_model`: Meshtastic hardware model identifier to assign (a registered `HardwareModel` enum value).
 - `display_name`: Human-readable board name.
-- `architecture`: Target architecture family such as `esp32`, `esp32-s3`, `nrf52840`, `rp2040`, or `stm32`.
+- `architecture`: Target architecture family such as `esp32`, `esp32-s3`, `esp32-c3`, `esp32-c6`, `esp32s2`, `esp32p4`, `nrf52840`, `nrf54l15`, `rp2040`, `rp2350`, `stm32`, or `native`.
 
 ### Recommended Fields
 
-- `hardware_model_slug`: Repository-style uppercase slug if already known.
+- `hardware_model_slug`: Repository-style uppercase slug if already known (should match the `HardwareModel` enum entry name).
 - `actively_supported`: Whether the board is intended to be actively supported.
 - `support_level`: Intended `custom_meshtastic_support_level` value.
+- `board_level`: Intended CI build tier (`pr`, `extra`, `community`, or omitted for release-only builds).
 - `source_materials`: Links, file paths, or notes for schematics, pinouts, datasheets, or vendor pages.
 - `board_notes`: Freeform notes about revisions, peripherals, or known uncertainty.
 
@@ -29,6 +30,11 @@ This contract defines the minimum maintainer input and the expected workflow out
 - The workflow must identify when architecture defaults may be relevant and flag them for human review.
 
 ## Output Contract
+
+The assessment is available in two renderings: markdown for humans (default) and JSON
+via `--json` for programmatic consumers (CI actions, web tooling). Both contain the
+same sections. `bin/board_scaffold.py --json` likewise reports generated file paths,
+or the blocking assessment with a non-zero exit.
 
 ### Required Assessment Sections
 

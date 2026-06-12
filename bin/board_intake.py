@@ -16,11 +16,12 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONTEXT_PATH = ROOT / "docs" / "hardware-support-context.md"
+DEFAULT_CONTEXT_JSON_PATH = ROOT / "docs" / "hardware-support-context.json"
 
 # Metadata keys every new PlatformIO environment should declare.
 REQUIRED_METADATA_KEYS = [
@@ -43,7 +44,11 @@ RECOMMENDED_METADATA_KEYS = [
 EVIDENCE_CATEGORIES = ["radio", "display", "input", "GPS", "power"]
 
 # Architecture families that rely on BSP defaults for many pin defines.
-BSP_DEFAULT_FAMILIES = {"nrf52840", "rp2040", "stm32", "native"}
+BSP_DEFAULT_FAMILIES = {"nrf52840", "nrf54l15", "rp2040", "rp2350", "stm32", "native"}
+
+# Architecture families where variant.cpp is effectively mandatory
+# (pin description tables / initVariant hooks), not an optional extra.
+VARIANT_CPP_REQUIRED_FAMILIES = {"nrf52840", "nrf54l15"}
 
 # Known valid architectures from the repository.
 KNOWN_ARCHITECTURES = {
@@ -52,12 +57,38 @@ KNOWN_ARCHITECTURES = {
     "esp32-c3",
     "esp32-c6",
     "esp32s2",
+    "esp32p4",
     "nrf52840",
+    "nrf54l15",
     "rp2040",
     "rp2350",
     "stm32",
     "native",
 }
+
+# Map canonical architecture names to variant directory roots under variants/.
+# Metadata uses hyphenated ESP32 family names; directories do not.
+ARCH_VARIANT_ROOT = {
+    "esp32": "esp32",
+    "esp32-s3": "esp32s3",
+    "esp32-c3": "esp32c3",
+    "esp32-c6": "esp32c6",
+    "esp32s2": "esp32s2",
+    "esp32p4": "esp32p4",
+    "nrf52840": "nrf52840",
+    "nrf54l15": "nrf54l15",
+    "rp2040": "rp2040",
+    "rp2350": "rp2350",
+    "stm32": "stm32",
+    "native": "native",
+}
+
+# CI build-tier values consumed by bin/generate_ci_matrix.py.
+#   pr        -> built on every PR and release
+#   (unset)   -> built on release builds only
+#   extra     -> built only on full releases (--level extra)
+#   community -> community-maintained DIY boards, excluded from the CI matrix
+KNOWN_BOARD_LEVELS = {"pr", "extra", "community"}
 
 
 # ---------------------------------------------------------------------------
@@ -79,6 +110,7 @@ class BoardIntakeRequest:
     hardware_model_slug: str = ""
     actively_supported: bool | None = None
     support_level: str = ""
+    board_level: str = ""
     source_materials: list[str] = field(default_factory=list)
     board_notes: str = ""
 
@@ -92,6 +124,7 @@ class BoardIntakeRequest:
             hardware_model_slug=data.get("hardware_model_slug", ""),
             actively_supported=data.get("actively_supported"),
             support_level=str(data.get("support_level", "")),
+            board_level=str(data.get("board_level", "") or ""),
             source_materials=list(data.get("source_materials", [])),
             board_notes=data.get("board_notes", ""),
         )
@@ -142,8 +175,37 @@ class IntakeAssessment:
 # ---------------------------------------------------------------------------
 
 
-def load_hardware_context(path: Path = DEFAULT_CONTEXT_PATH) -> dict:
-    """Parse the generated hardware-support-context.md into a usable dict.
+def _context_from_inventory_json(path: Path) -> dict:
+    """Build the context dict from the generated JSON inventory."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    environments: dict[str, dict] = {}
+    for arch, entries in data.get("architectures", {}).items():
+        for entry in entries:
+            env_name = entry.get("environment", "")
+            if not env_name:
+                continue
+            metadata = entry.get("metadata", {})
+            environments[env_name] = {
+                "display_name": metadata.get("custom_meshtastic_display_name", ""),
+                "hw_model": metadata.get("custom_meshtastic_hw_model", ""),
+                "hw_slug": metadata.get("custom_meshtastic_hw_model_slug", ""),
+                "variant_dir": entry.get("variant_dir", ""),
+                "architecture": arch,
+                "settings": entry.get("settings", {}),
+            }
+    return {
+        "architecture_names": sorted(data.get("architectures", {})),
+        "metadata_keys": list(data.get("metadata_keys", [])),
+        "environments": environments,
+    }
+
+
+def load_hardware_context(path: Path | None = None) -> dict:
+    """Load the generated hardware context into a usable dict.
+
+    With no explicit path, prefers the JSON inventory
+    (docs/hardware-support-context.json) and falls back to parsing the
+    markdown doc. An explicit path dispatches on its suffix.
 
     Returns:
         {
@@ -152,11 +214,20 @@ def load_hardware_context(path: Path = DEFAULT_CONTEXT_PATH) -> dict:
             "environments": dict[str, dict],  # env_name -> {display, hw_model, hw_slug, variant_dir, arch}
         }
     """
+    if path is None:
+        path = (
+            DEFAULT_CONTEXT_JSON_PATH
+            if DEFAULT_CONTEXT_JSON_PATH.exists()
+            else DEFAULT_CONTEXT_PATH
+        )
     if not path.exists():
         raise FileNotFoundError(
             f"Hardware context not found at {path}. "
             "Run: python3 bin/generate_hardware_support_context.py"
         )
+
+    if path.suffix == ".json":
+        return _context_from_inventory_json(path)
 
     text = path.read_text(encoding="utf-8")
 
@@ -230,6 +301,12 @@ def validate_intake(request: BoardIntakeRequest, context: dict) -> list[str]:
         errors.append(
             f"architecture '{request.architecture}' is not a known repository architecture. "
             f"Known: {', '.join(sorted(KNOWN_ARCHITECTURES))}"
+        )
+
+    if request.board_level and request.board_level not in KNOWN_BOARD_LEVELS:
+        errors.append(
+            f"board_level '{request.board_level}' is not a known CI build tier. "
+            f"Known: {', '.join(sorted(KNOWN_BOARD_LEVELS))} (or omit for release-only builds)"
         )
 
     # Conflict: environment name already exists
@@ -360,6 +437,21 @@ def build_evidence_gaps(request: BoardIntakeRequest) -> list[EvidenceGap]:
             )
         )
 
+    if not request.board_level:
+        gaps.append(
+            EvidenceGap(
+                category="metadata",
+                description=(
+                    "board_level is not specified. This controls the CI build matrix: "
+                    "'pr' = built on every PR, unset = release builds only, "
+                    "'extra' = full releases only, 'community' = excluded from CI."
+                ),
+                affected_artifact="platformio.ini (board_level)",
+                required_evidence="Maintainer decision on CI build tier",
+                blocking=False,
+            )
+        )
+
     # Revision-scope: multiple display/radio options without disambiguation.
     # Match whole-word choice language rather than raw substrings so normal text
     # like "radio" does not trigger the ambiguity gate.
@@ -377,7 +469,9 @@ def build_evidence_gaps(request: BoardIntakeRequest) -> list[EvidenceGap]:
         r"\beither\b",
         r"\bor\b",
     )
-    if note_text and any(re.search(pattern, note_text) for pattern in revision_scope_patterns):
+    if note_text and any(
+        re.search(pattern, note_text) for pattern in revision_scope_patterns
+    ):
         gaps.append(
             EvidenceGap(
                 category="revision-scope",
@@ -405,13 +499,22 @@ def assess_intake(request: BoardIntakeRequest, context: dict) -> IntakeAssessmen
     matched = find_matched_patterns(request, context)
     gaps = build_evidence_gaps(request)
 
+    variant_root = ARCH_VARIANT_ROOT.get(
+        request.architecture, request.architecture or "<architecture>"
+    )
     expected_artifacts = [
-        f"variants/{request.architecture or '<architecture>'}/<variant-dir>/variant.h",
-        f"variants/{request.architecture or '<architecture>'}/<variant-dir>/platformio.ini (env:{request.environment_name or '<env>'})",
+        f"variants/{variant_root}/<variant-dir>/variant.h",
+        f"variants/{variant_root}/<variant-dir>/platformio.ini (env:{request.environment_name or '<env>'})",
     ]
-    if request.architecture in {"esp32", "esp32-s3", "esp32-c3", "esp32-c6"}:
+    if request.architecture in VARIANT_CPP_REQUIRED_FAMILIES:
         expected_artifacts.append(
-            "(optional) variants/.../variant.cpp — only if board requires custom init hooks"
+            f"variants/{variant_root}/<variant-dir>/variant.cpp — required on this family "
+            "(pin description table / initVariant); the env also needs a matching build_src_filter entry"
+        )
+    else:
+        expected_artifacts.append(
+            "(optional) variants/.../variant.cpp — only if board requires custom init hooks "
+            "or a variantDefaultConfig() override"
         )
     expected_artifacts += [
         "PlatformIO metadata: all required custom_meshtastic_* keys (see required_metadata below)",
@@ -419,6 +522,9 @@ def assess_intake(request: BoardIntakeRequest, context: dict) -> IntakeAssessmen
     ]
 
     required_metadata = list(REQUIRED_METADATA_KEYS)
+    required_metadata.append(
+        "board_level (CI build tier: pr / unset / extra / community — see bin/generate_ci_matrix.py)"
+    )
     if request.architecture in BSP_DEFAULT_FAMILIES:
         required_metadata.append(
             f"(BSP note) {request.architecture} boards may inherit some pin defines from BSP headers — "
@@ -500,6 +606,8 @@ def render_assessment_markdown(assessment: IntakeAssessment) -> str:
         lines.append(f"- **Actively supported**: {req.actively_supported}")
     if req.support_level:
         lines.append(f"- **Support level**: {req.support_level}")
+    if req.board_level:
+        lines.append(f"- **Board level (CI tier)**: {req.board_level}")
     if req.source_materials:
         lines.append("- **Source materials**:")
         for src in req.source_materials:
@@ -596,9 +704,15 @@ def main() -> None:
         help="Exit with code 1 if scaffold_ready is false (useful for CI gate checks)",
     )
     parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit the assessment as JSON instead of markdown (for programmatic consumers)",
+    )
+    parser.add_argument(
         "--context",
-        default=str(DEFAULT_CONTEXT_PATH),
-        help="Path to docs/hardware-support-context.md (default: auto-detected)",
+        default=None,
+        help="Path to a hardware-support-context .json or .md file "
+        "(default: prefer the generated JSON inventory, fall back to markdown)",
     )
     args = parser.parse_args()
 
@@ -608,9 +722,12 @@ def main() -> None:
         sys.exit(2)
 
     request = BoardIntakeRequest.from_json(intake_path)
-    context = load_hardware_context(Path(args.context))
+    context = load_hardware_context(Path(args.context) if args.context else None)
     assessment = assess_intake(request, context)
-    report = render_assessment_markdown(assessment)
+    if args.json:
+        report = json.dumps(asdict(assessment), indent=2)
+    else:
+        report = render_assessment_markdown(assessment)
 
     if args.output == "-":
         print(report)

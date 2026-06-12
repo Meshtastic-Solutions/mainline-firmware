@@ -4,11 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
+from dataclasses import asdict
 from pathlib import Path
 
 from board_intake import (
+    ARCH_VARIANT_ROOT,
+    VARIANT_CPP_REQUIRED_FAMILIES,
     BoardIntakeRequest,
     EvidenceGap,
     IntakeAssessment,
@@ -20,30 +24,21 @@ from board_intake import (
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_ROOT = ROOT / "generated" / "hardware-support"
 
+# Base environment section each architecture's envs should extend.
+# Verified against variants/<arch>/<arch>.ini section headers.
 ARCH_BASE_ENV = {
     "esp32": "esp32_base",
     "esp32-s3": "esp32s3_base",
     "esp32-c3": "esp32c3_base",
     "esp32-c6": "esp32c6_base",
     "esp32s2": "esp32s2_base",
-    "nrf52840": "nrf52_base",
+    "esp32p4": "esp32p4_base",
+    "nrf52840": "nrf52840_base",
+    "nrf54l15": "nrf54l15_base",
     "rp2040": "rp2040_base",
     "rp2350": "rp2350_base",
     "stm32": "stm32_base",
-    "native": "native_base",
-}
-
-ARCH_VARIANT_ROOT = {
-    "esp32": "esp32",
-    "esp32-s3": "esp32s3",
-    "esp32-c3": "esp32c3",
-    "esp32-c6": "esp32c6",
-    "esp32s2": "esp32s2",
-    "nrf52840": "nrf52840",
-    "rp2040": "rp2040",
-    "rp2350": "rp2350",
-    "stm32": "stm32",
-    "native": "native",
+    "native": "portduino_base",
 }
 
 PLACEHOLDER_DEFINES = {
@@ -227,7 +222,9 @@ def generate_variant_h(assessment: IntakeAssessment, context: dict) -> str:
     pattern = pick_pattern(assessment)
     pattern_variant_path = None
     if pattern and pattern.get("variant_dir"):
-        pattern_variant_path = (ROOT / str(pattern["variant_dir"]) / "variant.h").resolve()
+        pattern_variant_path = (
+            ROOT / str(pattern["variant_dir"]) / "variant.h"
+        ).resolve()
 
     for category in ("status", "input", "display", "GPS", "power", "radio"):
         lines.append(f"// {category}")
@@ -257,6 +254,7 @@ def generate_platformio_env(assessment: IntakeAssessment) -> str:
     build_define = (
         req.hardware_model_slug or req.environment_name.upper().replace("-", "_")
     ).replace(" ", "_")
+    is_esp32_family = req.architecture.startswith("esp32")
 
     lines = [
         f"[env:{req.environment_name}]",
@@ -269,22 +267,40 @@ def generate_platformio_env(assessment: IntakeAssessment) -> str:
         "custom_meshtastic_images = TODO_SET_IMAGES",
         "custom_meshtastic_tags = TODO_SET_TAGS",
         "custom_meshtastic_requires_dfu = TODO_SET_REQUIRES_DFU",
-        "custom_meshtastic_partition_scheme = TODO_SET_PARTITION_SCHEME",
-        "",
-        "board = TODO_SET_PLATFORMIO_BOARD",
+    ]
+    if is_esp32_family:
+        lines.append("custom_meshtastic_partition_scheme = TODO_SET_PARTITION_SCHEME")
+    lines.append("")
+    lines.append("board = TODO_SET_PLATFORMIO_BOARD")
+    if req.board_level:
+        lines.append(f"board_level = {req.board_level}")
+    else:
+        lines.append(
+            "; board_level = TODO — pr (every PR), unset (release builds), extra (full releases only)"
+        )
+    lines += [
         f"extends = {extends}",
         "build_flags =",
         f"  ${{{extends}.build_flags}}",
         f"  -D {build_define}",
         f"  -I {variant_dir.as_posix()}",
     ]
+    if req.architecture in VARIANT_CPP_REQUIRED_FAMILIES:
+        # nRF-family envs must compile their variant.cpp explicitly; the
+        # repo convention sources the filter from the low-level nrf52_base.
+        filter_base = "nrf52_base" if req.architecture == "nrf52840" else extends
+        lines.append(
+            f"build_src_filter = ${{{filter_base}.build_src_filter}} +<../{variant_dir.as_posix()}>"
+        )
     return "\n".join(lines).rstrip() + "\n"
 
 
 # T030
 
 
-def annotate_unresolved(content: str, gaps: list[EvidenceGap], is_ini: bool = False) -> str:
+def annotate_unresolved(
+    content: str, gaps: list[EvidenceGap], is_ini: bool = False
+) -> str:
     annotations = [
         gap
         for gap in gaps
@@ -296,7 +312,7 @@ def annotate_unresolved(content: str, gaps: list[EvidenceGap], is_ini: bool = Fa
 
     lines = content.splitlines()
     todo_lines = [f"; TODO: verify — {gap.description}" for gap in annotations]
-    
+
     if is_ini:
         # For INI files, insert TODOs after the first section header
         if lines and lines[0].startswith("["):
@@ -305,7 +321,7 @@ def annotate_unresolved(content: str, gaps: list[EvidenceGap], is_ini: bool = Fa
         # For .h files, prepend TODOs with C++ comment syntax
         todo_lines = [f"// TODO: verify — {gap.description}" for gap in annotations]
         return "\n".join(todo_lines + [""] + lines) + "\n"
-    
+
     return content
 
 
@@ -337,7 +353,31 @@ def scaffold_board(
         "platformio": platformio_path,
     }
 
-    if req.architecture in {"esp32", "esp32-s3", "esp32-c3", "esp32-c6"}:
+    if req.architecture in VARIANT_CPP_REQUIRED_FAMILIES:
+        pattern = pick_pattern(assessment)
+        pattern_hint = (
+            f"{pattern.get('variant_dir', '')}/variant.cpp"
+            if pattern and pattern.get("variant_dir")
+            else "a closely related board's variant.cpp"
+        )
+        variant_cpp_path = variant_dir / "variant.cpp"
+        variant_cpp_content = annotate_unresolved(
+            "\n".join(
+                [
+                    '#include "variant.h"',
+                    "",
+                    "// TODO: verify — this family requires a real variant.cpp.",
+                    f"// Copy the pin description table and initVariant() from {pattern_hint},",
+                    "// then update every entry against this board's schematic.",
+                    "// The scaffold cannot generate pin tables; this stub will not link as-is.",
+                ]
+            )
+            + "\n",
+            assessment.evidence_gaps,
+        )
+        variant_cpp_path.write_text(variant_cpp_content, encoding="utf-8")
+        generated["variant_cpp"] = variant_cpp_path
+    elif req.architecture.startswith("esp32"):
         variant_cpp_path = variant_dir / "variant.cpp"
         variant_cpp_content = annotate_unresolved(
             "\n".join(
@@ -345,6 +385,7 @@ def scaffold_board(
                     '#include "variant.h"',
                     "",
                     "// Optional board-specific initialization hooks go here.",
+                    "// Define variantDefaultConfig() to override default device config.",
                     "// Leave this file out if the board does not need custom startup behavior.",
                 ]
             )
@@ -370,22 +411,53 @@ def main() -> None:
         default=str(DEFAULT_OUTPUT_ROOT),
         help="Directory where scaffold files will be written",
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit a JSON result (generated paths, or the blocking assessment) "
+        "instead of human-readable output",
+    )
     args = parser.parse_args()
 
     intake_path = Path(args.intake)
     request = BoardIntakeRequest.from_json(intake_path)
     context = load_hardware_context()
-    context["context_path"] = "docs/hardware-support-context.md"
+    context["context_path"] = (
+        "docs/hardware-support-context.json"
+        if (ROOT / "docs" / "hardware-support-context.json").exists()
+        else "docs/hardware-support-context.md"
+    )
     assessment = assess_intake(request, context)
 
     if not assessment.scaffold_ready:
-        print(render_assessment_markdown(assessment))
+        if args.json:
+            print(
+                json.dumps(
+                    {"scaffold_ready": False, "assessment": asdict(assessment)},
+                    indent=2,
+                )
+            )
+        else:
+            print(render_assessment_markdown(assessment))
         sys.exit(1)
 
     generated = scaffold_board(assessment, context, Path(args.output_dir))
-    print("Generated scaffold files:")
-    for name, path in generated.items():
-        print(f"- {name}: {path}")
+    if args.json:
+        print(
+            json.dumps(
+                {
+                    "scaffold_ready": True,
+                    "environment": request.environment_name,
+                    "variant_dir": str(target_variant_dir(request)),
+                    "generated": {name: str(path) for name, path in generated.items()},
+                },
+                indent=2,
+            )
+        )
+    else:
+        print("Generated scaffold files:")
+        for name, path in generated.items():
+            print(f"- {name}: {path}")
 
 
 if __name__ == "__main__":

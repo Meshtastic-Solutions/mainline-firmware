@@ -1,8 +1,10 @@
 # Board bring-up agent — dispatched by Meshtastic Readyline (or manually).
 #
-# workflow_dispatch (not repository_dispatch) so it can run against the branch
-# that carries the hardware-support tooling: the dispatcher passes ref=<branch>
-# and the workflow file only needs to exist on that ref.
+# workflow_dispatch so it can run against the branch that carries the
+# hardware-support tooling: the dispatcher passes ref=<that branch> and GitHub
+# executes the workflow file AS IT EXISTS ON THAT REF. Note: a copy of this
+# file must also live on the default branch (develop) — GitHub only registers
+# dispatchable workflows from there; the develop copy is a registration stub.
 #
 # Required repo secrets:
 #   ANTHROPIC_API_KEY        org Console key (recommended for shared repo)

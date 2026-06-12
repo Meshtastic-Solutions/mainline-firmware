@@ -144,6 +144,23 @@ bare `intake.json`. If empty, look for `/tmp/board-packet` (the CI download path
      (Works because mainline-firmware is a fork of meshtastic/firmware and the
      branch is rooted on develop — the upstream diff is identical to this PR.)
 
-10. **Report.** End with: PR URL, pins resolved vs TODO count, build status, and
+10. **Notify Readyline.** Write the outcome to `/tmp/board-result.json` so the
+    CI job can post it back (this is how the device's firmware stage learns the
+    result — do it whether you succeeded, were blocked, or had to stop):
+
+    ```bash
+    cat > /tmp/board-result.json <<'JSON'
+    { "status": "pr_opened", "url": "<the draft PR URL>", "summary": "<one line: pins resolved / TODO count>" }
+    JSON
+    ```
+
+    - `status`: `pr_opened` if you opened a draft PR, `blocked` if a conflict or
+      missing-evidence gate stopped you before a PR, `failed` on an
+      unrecoverable error.
+    - `url`: the draft PR URL for `pr_opened`; omit otherwise (CI falls back to
+      the run log).
+    - `summary`: one short line; it shows in the Readyline activity feed.
+
+11. **Report.** End with: PR URL, pins resolved vs TODO count, build status, and
     anything a human must verify on physical hardware (ADC multiplier and RF
     switch wiring are the classic ones).

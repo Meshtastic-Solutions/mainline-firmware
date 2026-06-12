@@ -110,9 +110,10 @@ jobs:
             - Expected environment: ${{ inputs.environment_name || 'see intake.json' }}
             - Requested by: ${{ inputs.requested_by || 'manual dispatch' }}
             - Readyline device page: ${{ inputs.readyline_device_url || 'n/a' }}
-            - Root the board branch on origin/${{ inputs.pr_base }} and open the
-              draft PR in this repo (Meshtastic-Solutions/mainline-firmware)
-              with --base ${{ inputs.pr_base }}, exactly as the command's
+            - Root the board branch on the merge-base of origin/${{ inputs.pr_base }}
+              and upstream meshtastic/firmware develop, then open the draft PR
+              in this repo (Meshtastic-Solutions/mainline-firmware) with
+              --base ${{ inputs.pr_base }}, exactly as the command's
               upstream-ready branch strategy describes. Do NOT open a PR
               against meshtastic/firmware — upstream promotion is a human step.
 

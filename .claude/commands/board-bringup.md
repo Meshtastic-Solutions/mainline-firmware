@@ -88,13 +88,17 @@ bare `intake.json`. If empty, look for `/tmp/board-packet` (the CI download path
 
 7. **Cut an upstream-ready branch.** The PR must eventually flow
    Meshtastic-Solutions/mainline-firmware → meshtastic/firmware, so the board
-   branch must be rooted on `develop` — **never on the agent/tooling branch**
-   this command runs from (that would drag the tooling commits into the
-   variant PR).
+   branch must carry **only the variant commit** relative to BOTH repos —
+   never the agent/tooling commits of the branch this command runs from, and
+   never fork-only commits on this repo's `develop`. Root it on the merge-base
+   of the fork's develop and upstream's develop (a commit in both histories):
 
    ```bash
+   git remote add upstream https://github.com/meshtastic/firmware.git 2>/dev/null || true
    git fetch origin develop
-   git checkout -b board/<environment_name> origin/develop
+   git fetch upstream develop
+   MB=$(git merge-base origin/develop upstream/develop)
+   git checkout -b board/<environment_name> "$MB"
    ```
 
    The new variant directory is untracked, so it survives the branch switch.

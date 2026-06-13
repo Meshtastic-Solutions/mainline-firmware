@@ -41,11 +41,6 @@ on:
         required: false
         type: string
         default: ""
-      readyline_device_url:
-        description: Link back to the Readyline device page
-        required: false
-        type: string
-        default: ""
       requested_by:
         description: Who triggered this (shown in the PR)
         required: false
@@ -139,7 +134,6 @@ jobs:
             - Device: ${{ inputs.device_name || 'see intake.json' }}
             - Expected environment: ${{ inputs.environment_name || 'see intake.json' }}
             - Requested by: ${{ inputs.requested_by || 'manual dispatch' }}
-            - Readyline device page: ${{ inputs.readyline_device_url || 'n/a' }}
             - Root the board branch on the merge-base of origin/${{ inputs.pr_base }}
               and upstream meshtastic/firmware develop, then open the draft PR
               in this repo (Meshtastic-Solutions/mainline-firmware) with
@@ -155,8 +149,8 @@ jobs:
             --permission-mode acceptEdits
 
       # Fail-closed board-only guarantee: the variant model is self-contained
-      # (everything lives under variants/<arch>/<env>/), so the board branch
-      # must touch NOTHING else. Rooting on the merge-base keeps the fork's
+      # (variants/<arch>/<env>/ plus its boards/<board>.json), so the board
+      # branch must touch NOTHING else. Rooting on the merge-base keeps the fork's
       # develop divergence out of the diff; this proves it deterministically
       # rather than trusting the agent. A polluted branch is deleted and the
       # run fails so a non-board-only PR is never left openable.
@@ -181,7 +175,7 @@ jobs:
           FILES=$(git diff --name-only "origin/${PR_BASE}...origin/${BRANCH}")
           echo "Files the PR would contain:"
           echo "$FILES"
-          OUTSIDE=$(echo "$FILES" | grep -vE '^variants/' || true)
+          OUTSIDE=$(echo "$FILES" | grep -vE '^(variants/|boards/[^/]+\.json$)' || true)
           if [ -n "$OUTSIDE" ]; then
             echo "::error::$BRANCH touches paths outside variants/ - refusing a non-board-only PR. Offending paths:"
             echo "$OUTSIDE"

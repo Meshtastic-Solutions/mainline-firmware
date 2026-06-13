@@ -79,6 +79,7 @@ jobs:
           READYLINE_SERVICE_TOKEN: ${{ secrets.READYLINE_SERVICE_TOKEN }}
         run: |
           [ -n "$READYLINE_SERVICE_TOKEN" ] || { echo "::error::READYLINE_SERVICE_TOKEN secret is not set"; exit 1; }
+          echo "RUN_STARTED=$(date -u +%FT%TZ)" >> "$GITHUB_ENV"
           if [ -n "$ANTHROPIC_API_KEY" ] && [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
             echo "::error::Set only ONE of ANTHROPIC_API_KEY / CLAUDE_CODE_OAUTH_TOKEN"; exit 1
           fi
@@ -120,6 +121,7 @@ jobs:
         run: pip install --upgrade platformio
 
       - name: Run bring-up agent
+        id: agent
         # Pinned to a commit SHA (v1) — a moving tag on a third-party action
         # could be repointed to code that exfiltrates this job's secrets.
         uses: anthropics/claude-code-action@0cb4f3e5e764d2e00407d29b6bf0aa9df0976d88 # v1
@@ -151,3 +153,50 @@ jobs:
           claude_args: |
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
             --permission-mode acceptEdits
+
+      # Close the loop with Readyline: the device card advances from
+      # "dispatched" to pr_opened / blocked / failed off this callback. The
+      # URL is derived from bundle_url (same device, .../firmware-result) so
+      # no extra dispatch input is needed. Non-fatal by design — a Readyline
+      # outage must never fail an agent run.
+      - name: Report result to Readyline
+        if: always()
+        env:
+          # Via env, never inline in the script — same injection posture as above.
+          BUNDLE_URL: ${{ inputs.bundle_url }}
+          READYLINE_SERVICE_TOKEN: ${{ secrets.READYLINE_SERVICE_TOKEN }}
+          AGENT_OUTCOME: ${{ steps.agent.outcome }}
+          PR_BASE: ${{ inputs.pr_base }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          CALLBACK="${BUNDLE_URL%/firmware-bundle}/firmware-result"
+          if [ "$CALLBACK" = "$BUNDLE_URL" ]; then
+            echo "::warning::bundle_url has no /firmware-bundle suffix; skipping Readyline callback"
+            exit 0
+          fi
+
+          # The agent opens the draft PR itself; find it instead of parsing
+          # logs — newest open PR on the base branch, authored by the Actions
+          # identity, created since this run started.
+          PR_URL=$(gh pr list --repo "$REPO" --base "$PR_BASE" --state open \
+            --author "app/github-actions" --json url,createdAt \
+            --jq "[.[] | select(.createdAt >= \"$RUN_STARTED\")] | sort_by(.createdAt) | last | .url // empty" \
+            2>/dev/null || true)
+
+          if [ "$AGENT_OUTCOME" = "success" ] && [ -n "$PR_URL" ]; then
+            STATUS=pr_opened URL="$PR_URL" SUMMARY=""
+          elif [ "$AGENT_OUTCOME" = "success" ]; then
+            STATUS=blocked URL="$RUN_URL" SUMMARY="Agent finished without opening a PR — see the run log."
+          else
+            STATUS=failed URL="$RUN_URL" SUMMARY="Agent step outcome: ${AGENT_OUTCOME}."
+          fi
+
+          jq -n --arg status "$STATUS" --arg url "$URL" --arg summary "$SUMMARY" \
+            '{status: $status, url: $url} + (if $summary != "" then {summary: $summary} else {} end)' \
+          | curl -fsS -X POST "$CALLBACK" \
+              -H "Authorization: Bearer ${READYLINE_SERVICE_TOKEN}" \
+              -H "Content-Type: application/json" \
+              --data-binary @- \
+          || echo "::warning::Readyline callback failed (non-fatal)"

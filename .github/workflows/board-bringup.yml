@@ -159,7 +159,7 @@ jobs:
       # must touch NOTHING else. Rooting on the merge-base keeps the fork's
       # develop divergence out of the diff; this proves it deterministically
       # rather than trusting the agent. A polluted branch is deleted and the
-      # run fails — a bad PR is never left openable.
+      # run fails so a non-board-only PR is never left openable.
       - name: Verify board branch is board-only (fail closed)
         if: always()
         env:
@@ -168,30 +168,27 @@ jobs:
         run: |
           BRANCH="board/${ENV_NAME}"
           if [ -z "$ENV_NAME" ]; then
-            echo "No environment_name input; cannot identify the board branch — skipping."
+            echo "No environment_name input; cannot identify the board branch - skipping."
             exit 0
           fi
           if ! git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
-            echo "No $BRANCH on origin (agent pushed nothing) — nothing to verify."
+            echo "No $BRANCH on origin (agent pushed nothing) - nothing to verify."
             exit 0
           fi
           git fetch --quiet origin "$PR_BASE" "$BRANCH"
-          # Three-dot diff = the exact set GitHub renders in the PR (base..head
-          # from their merge-base), so fork-only commits on $PR_BASE don't count.
+          # Three-dot diff = exactly what GitHub renders in the PR (from the
+          # base/head merge-base), so fork-only commits on $PR_BASE don't count.
           FILES=$(git diff --name-only "origin/${PR_BASE}...origin/${BRANCH}")
-          echo "Files the PR would contain:"; printf '  %s
-' $FILES
-          OUTSIDE=$(printf '%s
-' $FILES | grep -vE '^variants/' || true)
+          echo "Files the PR would contain:"
+          echo "$FILES"
+          OUTSIDE=$(echo "$FILES" | grep -vE '^variants/' || true)
           if [ -n "$OUTSIDE" ]; then
-            echo "::error::$BRANCH touches paths outside variants/ — refusing a non-board-only PR. Offending paths:"
-            printf '  %s
-' $OUTSIDE
+            echo "::error::$BRANCH touches paths outside variants/ - refusing a non-board-only PR. Offending paths:"
+            echo "$OUTSIDE"
             git push origin --delete "$BRANCH" || true
             exit 1
           fi
-          echo "board-only OK: $(printf '%s
-' $FILES | grep -c .) file(s), all under variants/"
+          echo "board-only OK: $(echo "$FILES" | grep -c .) file(s), all under variants/"
 
       # Close the loop with Readyline: the device card advances from
       # "dispatched" to pr_opened / blocked / failed off this callback. The

@@ -1,11 +1,11 @@
 ---
-description: Bring up a new board from a Readyline board packet — intake assessment, schematic pin extraction, variant scaffold, pio build, draft PR
+description: Bring up a new board from a board packet — intake assessment, schematic pin extraction, variant scaffold, pio build, draft PR
 argument-hint: [path to board-packet .zip, packet directory, or intake.json]
 ---
 
 # `/board-bringup` — board packet → draft variant PR
 
-Take a Meshtastic Readyline **board packet** and carry it as far toward a working
+Take a **board packet** and carry it as far toward a working
 variant as the evidence allows: validate the intake, read the schematic, scaffold
 the variant, fill every pin you can prove, build it, and open a **draft** PR.
 
@@ -31,7 +31,7 @@ bare `intake.json`. If empty, look for `/tmp/board-packet` (the CI download path
 1. **Unpack.** If given a zip, extract to `/tmp/board-packet`. Identify:
    `intake.json` (required), `source-materials/` (schematics/datasheets),
    `hwmodel.patch` (optional), `README.md`. Read the README — it carries
-   Readyline's gap notes.
+   the packet's gap notes.
 
 2. **Refresh agent context** (cheap, keeps pattern-matching current):
 
@@ -133,7 +133,6 @@ bare `intake.json`. If empty, look for `/tmp/board-packet` (the CI download path
    - **Unresolved TODOs** with what evidence would close each
    - Build result (`pio run -e <env>` output tail)
    - Protobufs dependency note if the HW model isn't merged upstream
-   - Link back to the Readyline device page when one was provided
    - A **"Promote to upstream"** section with the exact command a maintainer
      runs once this passes review and hardware verification:
      ```bash

@@ -79,12 +79,12 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | `GPS_TX_PIN`              | 116 variants | UART TX pin connected to the GPS module RX input.                              |
 | `HAS_GPS`                 | 76 variants  | Set to 1 if the board has an on-board GPS receiver; 0 to disable GPS entirely. |
 | `PIN_GPS_PPS`             | 48 variants  | GPS pulse-per-second input pin for timing synchronisation.                     |
-| `PIN_GPS_EN`              | 35 variants  | GPIO to power-enable or power-gate the GPS module.                             |
+| `PIN_GPS_EN`              | 36 variants  | GPIO to power-enable or power-gate the GPS module.                             |
 | `GPS_THREAD_INTERVAL`     | 32 variants  | Millisecond poll interval for the GPS background thread.                       |
 | `GPS_BAUDRATE`            | 31 variants  | UART baud rate for GPS serial communication.                                   |
 | `GPS_L76K`                | 30 variants  | Selects the Quectel L76K GPS driver and protocol.                              |
 | `PIN_GPS_STANDBY`         | 30 variants  | Places the GPS into standby/low-power mode when driven.                        |
-| `GPS_EN_ACTIVE`           | 22 variants  | Logic level (HIGH or LOW) that enables the GPS power pin.                      |
+| `GPS_EN_ACTIVE`           | 23 variants  | Logic level (HIGH or LOW) that enables the GPS power pin.                      |
 | `PIN_GPS_RESET`           | 18 variants  | Hardware-reset line to the GPS module.                                         |
 | `GPS_DEFAULT_NOT_PRESENT` | 16 variants  | Compiled-in default assuming no GPS; overridden at runtime if detected.        |
 | `GPS_RESET_MODE`          | 14 variants  | Defines the reset signal polarity or protocol for the GPS chip.                |
@@ -416,7 +416,7 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | t-echo-plus                      | LILYGO T-Echo Plus         | 33       | T_ECHO_PLUS               | variants/nrf52840/t-echo-plus                  | Display:8, Radio:8, GPS:7, Power:6                        |
 | thinknode_m1                     | ThinkNode M1               | 89       | THINKNODE_M1              | variants/nrf52840/ELECROW-ThinkNode-M1         | Display:7, Radio:8, Input:1, GPS:8, Power:8               |
 | thinknode_m1-inkhud              |                            |          |                           | variants/nrf52840/ELECROW-ThinkNode-M1         | Display:7, Radio:8, Input:1, GPS:8, Power:8               |
-| thinknode_m3                     | Elecrow ThinkNode M3       | 115      | THINKNODE_M3              | variants/nrf52840/ELECROW-ThinkNode-M3         | Radio:1, Input:2, GPS:8, Power:7, Connectivity/Other:1    |
+| thinknode_m3                     | Elecrow ThinkNode M3       | 115      | THINKNODE_M3              | variants/nrf52840/ELECROW-ThinkNode-M3         | Radio:1, Input:2, GPS:9, Power:7, Connectivity/Other:1    |
 | thinknode_m4                     |                            |          |                           | variants/nrf52840/ELECROW-ThinkNode-M4         | Radio:8, GPS:12, Power:7                                  |
 | thinknode_m6                     | ThinkNode M6               | 120      | THINKNODE_M6              | variants/nrf52840/ELECROW-ThinkNode-M6         | Radio:7, GPS:9, Power:9, Connectivity/Other:1             |
 | tracker-t1000-e                  | Seeed SenseCAP T1000-E     | 71       | TRACKER_T1000_E           | variants/nrf52840/tracker-t1000-e              | Display:1, Radio:8, Input:1, GPS:13, Power:5              |

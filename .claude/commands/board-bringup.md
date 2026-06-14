@@ -18,15 +18,15 @@ bare `intake.json`. If empty, look for `/tmp/board-packet` (the CI download path
   schematic / pinout / datasheet in the packet, an existing variant in this repo
   for the same MCU + peripheral, or authoritative web research (see below). No
   evidence → leave the `// TODO: verify` in place.
-- **Cite evidence.** For every pin you resolve, record where it came from — file
-  + page/sheet/net label, the reference variant path, or the source URL. The
-  evidence table goes in the PR body.
+- **Cite evidence.** For every pin you resolve, record where it came from: the
+  file and page/sheet/net label, the reference variant path, or the source URL.
+  The evidence table goes in the PR body.
 - **Research, don't guess.** When the packet lacks a GPIO/peripheral fact, look it
   up before leaving a TODO: first `grep` the `variants/` tree for an existing
   board on the same MCU/chip (highest-signal, no network), then `WebFetch`
   authoritative external sources — the chip/module datasheet, the vendor's
   product/reference docs, or an open-source board definition for the same part.
-  A datasheet proves the *chip's* capabilities, not how *this board* wired them,
+  A datasheet proves the _chip's_ capabilities, not how _this board_ wired them,
   so web evidence narrows a TODO but — unless it is this exact board's official
   documentation — keep the `// TODO: verify` for hardware confirmation.
 - **Web access is read-only and bounded.** `WebFetch` is restricted to an

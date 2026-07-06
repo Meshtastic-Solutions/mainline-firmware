@@ -6,6 +6,11 @@
 //  - Schematic W10-MB-Sch-V1_1-0501106.pdf (4 pp., 2025-11-06), pin placement diagram W10-V1.2
 //  - Vendor Meshtastic fork (2.7.15 base) + Arduino demos from wiki.meshnology.com — the MCP23017
 //    virtual-pin HAL and DIO1 software-poll approach in src/ are ported from that fork.
+//
+// Hardware-verified on a Meshnology W10 AIOT Dev Kit: AXP2101 PMU, MCP23017 (0x20), SX1262 init +
+// over-the-air TX/RX round trip (radio RESET/DIO1/BUSY driven through the expander, DIO1 IRQ via
+// software poll), PCF85063 RTC, SHT41 (0x44) + QMI8658 IMU (0x6B) auto-detected, L76KB GPS fix,
+// and the board reporting HardwareModel 140 (MESHNOLOGY_W10).
 
 // ─── I2C bus ──────────────────────────────────────────────────────────────────
 // Shared by: AXP2101 PMIC, MCP23017 I/O expander, PCF85063ATL RTC, QMI8658 IMU,

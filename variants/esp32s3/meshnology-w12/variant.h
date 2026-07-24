@@ -16,14 +16,17 @@
 #define BUTTON_PIN 0 // BOOT doubles as user button
 
 // ─── Battery ──────────────────────────────────────────────────────────────────
-// GPIO2 monitors a second (solar/VUSB) divider and is not used here
+// The 390K/100K divider is gated by a P-FET that GPIO2 drives through an NPN inverter,
+// so unlike Heltec V3's direct-drive gate this one enables active HIGH.
 #define BATTERY_PIN 1
 #define ADC_CHANNEL ADC_CHANNEL_0 // GPIO1 = ADC1_CH0
-#define ADC_MULTIPLIER 2.0
+#define ADC_CTRL 2
+#define ADC_CTRL_ENABLED HIGH
+#define ADC_MULTIPLIER 4.9
 
 // ─── LoRa radio ───────────────────────────────────────────────────────────────
-// RF switching is hardwired to the radio's CTX/CPS pins, and the external PA enables
-// (IO3 sub-GHz, IO4 2.4GHz) are pulled high, so no RF-switch DIO table is needed.
+// RF switching lives on the radio's own DIOs (9/10/11 drive the sub-GHz PA, 5/6 the 2.4G
+// front end), not the ESP32; IO3/IO4 gate PA power and are left untouched here.
 #define USE_LR2021
 #define LORA_SCK 9
 #define LORA_MISO 11

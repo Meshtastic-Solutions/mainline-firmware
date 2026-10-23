@@ -7,8 +7,8 @@ frequently used pin or capability macros from scratch.
 
 ## Scope
 
-- Variant directories scanned: 178
-- PlatformIO environments summarized: 227
+- Variant directories scanned: 201
+- PlatformIO environments summarized: 271
 - Sources: `variants/**/platformio.ini` and `variants/**/variant.h`
 - Notes: This inventory reflects explicit per-variant declarations. Some boards also inherit
   defaults from architecture headers or shared base environments, which must still be checked
@@ -35,161 +35,161 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 
 | Macro                              | Used in      | Description                                                                 |
 | ---------------------------------- | ------------ | --------------------------------------------------------------------------- |
-| `BUTTON_PIN`                       | 131 variants | Primary user button GPIO pin number.                                        |
-| `ALT_BUTTON_PIN`                   | 12 variants  | Secondary / alternate button pin, used on boards with two buttons.          |
-| `CANCEL_BUTTON_PIN`                | 8 variants   | Button wired to cancel/back actions (e.g., T-Deck cancel key).              |
+| `BUTTON_PIN`                       | 150 variants | Primary user button GPIO pin number.                                        |
+| `ALT_BUTTON_PIN`                   | 14 variants  | Secondary / alternate button pin, used on boards with two buttons.          |
+| `CANCEL_BUTTON_PIN`                | 13 variants  | Button wired to cancel/back actions (e.g., T-Deck cancel key).              |
+| `KB_INT`                           | 6 variants   | Keyboard interrupt input pin; signals a keypress to the MCU.                |
 | `KB_BL_PIN`                        | 6 variants   | Keyboard backlight control pin (e.g., T-LoRa Pager keyboard).               |
-| `KB_INT`                           | 4 variants   | Keyboard interrupt input pin; signals a keypress to the MCU.                |
-| `INPUTDRIVER_ENCODER_TYPE`         | 3 variants   | Selects the rotary encoder driver variant (0 = none, 1+ = specific type).   |
-| `BUTTON_PIN_ALT`                   | 2 variants   | Alternative spelling used by some older board families for a second button. |
+| `INPUTDRIVER_ENCODER_TYPE`         | 4 variants   | Selects the rotary encoder driver variant (0 = none, 1+ = specific type).   |
+| `BUTTON_PIN_ALT`                   | 3 variants   | Alternative spelling used by some older board families for a second button. |
+| `KB_INT_WAKE_ON_HIGH`              | 2 variants   |                                                                             |
+| `KB_LED`                           | 2 variants   |                                                                             |
+| `INPUTDRIVER_ENCODER_BTN`          | 2 variants   |                                                                             |
 | `INPUTDRIVER_TWO_WAY_ROCKER`       | 2 variants   | Enables the two-way rocker input driver.                                    |
 | `INPUTDRIVER_TWO_WAY_ROCKER_RIGHT` | 2 variants   | GPIO pin for the rightward rocker direction.                                |
 | `INPUTDRIVER_TWO_WAY_ROCKER_LEFT`  | 2 variants   | GPIO pin for the leftward rocker direction.                                 |
 | `INPUTDRIVER_TWO_WAY_ROCKER_BTN`   | 2 variants   | GPIO pin for the rocker click/press direction.                              |
 | `KB_POWERON`                       | 2 variants   | Pin used to power-on or enable the keyboard peripheral.                     |
-| `KB_SLAVE_ADDRESS`                 | 2 variants   | I2C address of the keyboard controller IC.                                  |
-| `ROTARY_A`                         | 2 variants   | First encoder channel pin (clock / A signal).                               |
-| `ROTARY_B`                         | 2 variants   | Second encoder channel pin (data / B signal).                               |
 
 ### Radio
 
 | Macro                      | Used in      | Description                                                                   |
 | -------------------------- | ------------ | ----------------------------------------------------------------------------- |
-| `SX126X_CS`                | 159 variants | SX126x chip-select pin (often same as LORA_CS).                               |
-| `SX126X_RESET`             | 159 variants | SX126x reset pin (often same as LORA_RESET).                                  |
-| `SX126X_BUSY`              | 159 variants | SX126x BUSY pin; must be polled low before issuing SPI commands.              |
-| `SX126X_DIO1`              | 159 variants | SX126x DIO1 interrupt output used for all IRQ events.                         |
-| `USE_SX1262`               | 154 variants | Select the SX1262 sub-GHz LoRa chip driver.                                   |
-| `SX126X_DIO3_TCXO_VOLTAGE` | 149 variants | Drives the TCXO regulator via DIO3; set to the supply voltage (e.g., 1.8).    |
-| `LORA_CS`                  | 143 variants | LoRa radio SPI chip-select GPIO pin.                                          |
-| `SX126X_DIO2_AS_RF_SWITCH` | 143 variants | Set to 1 so the driver controls the TX/RX RF switch via DIO2.                 |
-| `LORA_RESET`               | 140 variants | LoRa radio hardware-reset GPIO pin (active low).                              |
-| `LORA_DIO1`                | 133 variants | LoRa radio DIO1 interrupt pin; on SX126x this is the primary IRQ line.        |
-| `LORA_SCK`                 | 132 variants | LoRa radio SPI clock pin.                                                     |
-| `LORA_MISO`                | 132 variants | LoRa radio SPI MISO pin.                                                      |
-| `LORA_MOSI`                | 132 variants | LoRa radio SPI MOSI pin.                                                      |
-| `LORA_DIO2`                | 114 variants | LoRa radio DIO2 pin; on RF95 used for FSK interrupt; on SX126x tx/rx control. |
-| `LORA_DIO0`                | 102 variants | LoRa radio DIO0 interrupt pin (RF95/SX1276 done/RxDone).                      |
+| `SX126X_CS`                | 186 variants | SX126x chip-select pin (often same as LORA_CS).                               |
+| `SX126X_RESET`             | 186 variants | SX126x reset pin (often same as LORA_RESET).                                  |
+| `SX126X_BUSY`              | 186 variants | SX126x BUSY pin; must be polled low before issuing SPI commands.              |
+| `SX126X_DIO1`              | 186 variants | SX126x DIO1 interrupt output used for all IRQ events.                         |
+| `USE_SX1262`               | 181 variants | Select the SX1262 sub-GHz LoRa chip driver.                                   |
+| `SX126X_DIO3_TCXO_VOLTAGE` | 179 variants | Drives the TCXO regulator via DIO3; set to the supply voltage (e.g., 1.8).    |
+| `SX126X_DIO2_AS_RF_SWITCH` | 169 variants | Set to 1 so the driver controls the TX/RX RF switch via DIO2.                 |
+| `LORA_CS`                  | 167 variants | LoRa radio SPI chip-select GPIO pin.                                          |
+| `LORA_RESET`               | 159 variants | LoRa radio hardware-reset GPIO pin (active low).                              |
+| `LORA_SCK`                 | 154 variants | LoRa radio SPI clock pin.                                                     |
+| `LORA_MISO`                | 154 variants | LoRa radio SPI MISO pin.                                                      |
+| `LORA_MOSI`                | 154 variants | LoRa radio SPI MOSI pin.                                                      |
+| `LORA_DIO1`                | 154 variants | LoRa radio DIO1 interrupt pin; on SX126x this is the primary IRQ line.        |
+| `LORA_DIO2`                | 120 variants | LoRa radio DIO2 pin; on RF95 used for FSK interrupt; on SX126x tx/rx control. |
+| `LORA_DIO0`                | 113 variants | LoRa radio DIO0 interrupt pin (RF95/SX1276 done/RxDone).                      |
 
 ### GPS
 
 | Macro                     | Used in      | Description                                                                    |
 | ------------------------- | ------------ | ------------------------------------------------------------------------------ |
-| `GPS_RX_PIN`              | 119 variants | UART RX pin connected to the GPS module TX output.                             |
-| `GPS_TX_PIN`              | 116 variants | UART TX pin connected to the GPS module RX input.                              |
-| `HAS_GPS`                 | 76 variants  | Set to 1 if the board has an on-board GPS receiver; 0 to disable GPS entirely. |
-| `PIN_GPS_PPS`             | 48 variants  | GPS pulse-per-second input pin for timing synchronisation.                     |
-| `PIN_GPS_EN`              | 36 variants  | GPIO to power-enable or power-gate the GPS module.                             |
-| `GPS_THREAD_INTERVAL`     | 32 variants  | Millisecond poll interval for the GPS background thread.                       |
-| `GPS_BAUDRATE`            | 31 variants  | UART baud rate for GPS serial communication.                                   |
-| `GPS_L76K`                | 30 variants  | Selects the Quectel L76K GPS driver and protocol.                              |
-| `PIN_GPS_STANDBY`         | 30 variants  | Places the GPS into standby/low-power mode when driven.                        |
-| `GPS_EN_ACTIVE`           | 23 variants  | Logic level (HIGH or LOW) that enables the GPS power pin.                      |
-| `PIN_GPS_RESET`           | 18 variants  | Hardware-reset line to the GPS module.                                         |
-| `GPS_DEFAULT_NOT_PRESENT` | 16 variants  | Compiled-in default assuming no GPS; overridden at runtime if detected.        |
-| `GPS_RESET_MODE`          | 14 variants  | Defines the reset signal polarity or protocol for the GPS chip.                |
-| `GPS_UBLOX`               | 8 variants   | Selects the u-blox GPS driver and UBX protocol.                                |
-| `PIN_GPS_REINIT`          | 7 variants   | Pin used to trigger GPS re-initialisation sequences.                           |
+| `GPS_RX_PIN`              | 143 variants | UART RX pin connected to the GPS module TX output.                             |
+| `GPS_TX_PIN`              | 140 variants | UART TX pin connected to the GPS module RX input.                              |
+| `HAS_GPS`                 | 104 variants | Set to 1 if the board has an on-board GPS receiver; 0 to disable GPS entirely. |
+| `PIN_GPS_PPS`             | 63 variants  | GPS pulse-per-second input pin for timing synchronisation.                     |
+| `PIN_GPS_EN`              | 54 variants  | GPIO to power-enable or power-gate the GPS module.                             |
+| `GPS_THREAD_INTERVAL`     | 42 variants  | Millisecond poll interval for the GPS background thread.                       |
+| `GPS_BAUDRATE`            | 41 variants  | UART baud rate for GPS serial communication.                                   |
+| `PIN_GPS_STANDBY`         | 34 variants  | Places the GPS into standby/low-power mode when driven.                        |
+| `GPS_EN_ACTIVE`           | 33 variants  | Logic level (HIGH or LOW) that enables the GPS power pin.                      |
+| `GPS_L76K`                | 33 variants  | Selects the Quectel L76K GPS driver and protocol.                              |
+| `PIN_GPS_RESET`           | 25 variants  | Hardware-reset line to the GPS module.                                         |
+| `GPS_RESET_MODE`          | 18 variants  | Defines the reset signal polarity or protocol for the GPS chip.                |
+| `GPS_DEFAULT_NOT_PRESENT` | 17 variants  | Compiled-in default assuming no GPS; overridden at runtime if detected.        |
+| `GPS_UBLOX`               | 11 variants  | Selects the u-blox GPS driver and UBX protocol.                                |
+| `GPS_SLEEP_INT`           | 9 variants   |                                                                                |
 
 ### Display
 
 | Macro                         | Used in     | Description                                                              |
 | ----------------------------- | ----------- | ------------------------------------------------------------------------ |
-| `PIN_EINK_CS`                 | 52 variants | E-ink display SPI chip-select pin.                                       |
-| `PIN_EINK_BUSY`               | 52 variants | E-ink display BUSY output; high when a page update is in progress.       |
-| `PIN_EINK_DC`                 | 52 variants | E-ink display data/command select pin.                                   |
-| `PIN_EINK_RES`                | 52 variants | E-ink display hardware-reset pin.                                        |
-| `PIN_EINK_SCLK`               | 50 variants | E-ink display SPI clock pin.                                             |
-| `PIN_EINK_MOSI`               | 50 variants | E-ink display SPI MOSI pin.                                              |
-| `HAS_SCREEN`                  | 38 variants | Set to 1 if the board has any display hardware.                          |
-| `USE_TFTDISPLAY`              | 31 variants | Selects the TFT LCD driver path.                                         |
-| `TFT_HEIGHT`                  | 26 variants | Vertical pixel resolution of the TFT display.                            |
-| `TFT_WIDTH`                   | 26 variants | Horizontal pixel resolution of the TFT display.                          |
-| `SCREEN_TRANSITION_FRAMERATE` | 24 variants | Target framerate for UI animations and transitions.                      |
-| `TFT_OFFSET_X`                | 23 variants | Horizontal pixel offset for display alignment correction.                |
-| `TFT_OFFSET_Y`                | 23 variants | Vertical pixel offset for display alignment correction.                  |
-| `SCREEN_ROTATE`               | 19 variants | Non-zero value rotates the display 180° for mounted-upside-down screens. |
-| `TFT_BL`                      | 16 variants | Backlight control PWM or GPIO pin for the TFT panel.                     |
+| `PIN_EINK_CS`                 | 64 variants | E-ink display SPI chip-select pin.                                       |
+| `PIN_EINK_BUSY`               | 64 variants | E-ink display BUSY output; high when a page update is in progress.       |
+| `PIN_EINK_DC`                 | 64 variants | E-ink display data/command select pin.                                   |
+| `PIN_EINK_RES`                | 64 variants | E-ink display hardware-reset pin.                                        |
+| `PIN_EINK_SCLK`               | 60 variants | E-ink display SPI clock pin.                                             |
+| `PIN_EINK_MOSI`               | 60 variants | E-ink display SPI MOSI pin.                                              |
+| `HAS_SCREEN`                  | 56 variants | Set to 1 if the board has any display hardware.                          |
+| `USE_TFTDISPLAY`              | 52 variants | Selects the TFT LCD driver path.                                         |
+| `TFT_HEIGHT`                  | 41 variants | Vertical pixel resolution of the TFT display.                            |
+| `TFT_WIDTH`                   | 41 variants | Horizontal pixel resolution of the TFT display.                          |
+| `TFT_OFFSET_X`                | 32 variants | Horizontal pixel offset for display alignment correction.                |
+| `TFT_OFFSET_Y`                | 32 variants | Vertical pixel offset for display alignment correction.                  |
+| `SCREEN_TRANSITION_FRAMERATE` | 31 variants | Target framerate for UI animations and transitions.                      |
+| `SCREEN_ROTATE`               | 26 variants | Non-zero value rotates the display 180° for mounted-upside-down screens. |
+| `TFT_BL`                      | 23 variants | Backlight control PWM or GPIO pin for the TFT panel.                     |
 
 ### I2C/SPI
 
 | Macro                   | Used in      | Description                                           |
 | ----------------------- | ------------ | ----------------------------------------------------- |
-| `I2C_SDA`               | 103 variants | Primary I2C data line GPIO pin.                       |
-| `I2C_SCL`               | 103 variants | Primary I2C clock line GPIO pin.                      |
-| `PIN_SPI_MISO`          | 74 variants  | Primary SPI MISO (data from peripheral) GPIO pin.     |
-| `PIN_SPI_MOSI`          | 74 variants  | Primary SPI MOSI (data to peripheral) GPIO pin.       |
-| `PIN_SPI_SCK`           | 74 variants  | Primary SPI clock GPIO pin.                           |
-| `SPI_INTERFACES_COUNT`  | 68 variants  | Number of hardware SPI buses available on this board. |
-| `WIRE_INTERFACES_COUNT` | 67 variants  | Number of hardware I2C buses available on this board. |
-| `PIN_SPI1_MISO`         | 37 variants  | Secondary SPI bus MISO pin.                           |
-| `PIN_SPI1_MOSI`         | 37 variants  | Secondary SPI bus MOSI pin.                           |
-| `PIN_SPI1_SCK`          | 37 variants  | Secondary SPI bus clock pin.                          |
-| `SPI_FREQUENCY`         | 25 variants  | Default SPI clock frequency in Hz for this board.     |
-| `SPI_READ_FREQUENCY`    | 22 variants  | Reduced SPI clock rate used for read transactions.    |
-| `SPI_SCK`               | 20 variants  | SPI clock pin alias used in older board files.        |
-| `SPI_MOSI`              | 20 variants  | SPI MOSI pin alias used in older board files.         |
-| `SPI_MISO`              | 20 variants  | SPI MISO pin alias used in older board files.         |
+| `I2C_SDA`               | 119 variants | Primary I2C data line GPIO pin.                       |
+| `I2C_SCL`               | 119 variants | Primary I2C clock line GPIO pin.                      |
+| `PIN_SPI_MISO`          | 95 variants  | Primary SPI MISO (data from peripheral) GPIO pin.     |
+| `PIN_SPI_MOSI`          | 95 variants  | Primary SPI MOSI (data to peripheral) GPIO pin.       |
+| `PIN_SPI_SCK`           | 95 variants  | Primary SPI clock GPIO pin.                           |
+| `WIRE_INTERFACES_COUNT` | 87 variants  | Number of hardware I2C buses available on this board. |
+| `SPI_INTERFACES_COUNT`  | 87 variants  | Number of hardware SPI buses available on this board. |
+| `PIN_SPI1_MISO`         | 47 variants  | Secondary SPI bus MISO pin.                           |
+| `PIN_SPI1_MOSI`         | 47 variants  | Secondary SPI bus MOSI pin.                           |
+| `PIN_SPI1_SCK`          | 47 variants  | Secondary SPI bus clock pin.                          |
+| `SPI_FREQUENCY`         | 35 variants  | Default SPI clock frequency in Hz for this board.     |
+| `SPI_READ_FREQUENCY`    | 31 variants  | Reduced SPI clock rate used for read transactions.    |
+| `SPI_SCK`               | 25 variants  | SPI clock pin alias used in older board files.        |
+| `SPI_MOSI`              | 25 variants  | SPI MOSI pin alias used in older board files.         |
+| `SPI_MISO`              | 25 variants  | SPI MISO pin alias used in older board files.         |
 
 ### Power
 
 | Macro                           | Used in      | Description                                                                |
 | ------------------------------- | ------------ | -------------------------------------------------------------------------- |
-| `BATTERY_PIN`                   | 138 variants | ADC input GPIO connected to the battery voltage divider.                   |
-| `ADC_MULTIPLIER`                | 132 variants | Floating-point scale factor to convert raw ADC reading to battery voltage. |
-| `ADC_CHANNEL`                   | 74 variants  | ADC channel enum or number for the battery sense input.                    |
-| `BATTERY_SENSE_RESOLUTION_BITS` | 69 variants  | ADC resolution in bits used for battery voltage sampling.                  |
-| `ADC_RESOLUTION`                | 51 variants  | Board-level ADC resolution definition, referenced by other power macros.   |
-| `BATTERY_SENSE_RESOLUTION`      | 46 variants  | Alias for the effective ADC resolution for battery sense.                  |
-| `ADC_CTRL`                      | 31 variants  | GPIO that enables or gates the ADC voltage-divider circuit.                |
-| `ADC_CTRL_ENABLED`              | 29 variants  | Logic level (HIGH or LOW) that turns on the ADC control switch.            |
-| `EXT_NOTIFY_OUT`                | 23 variants  | GPIO output used to signal an external LED or buzzer for notifications.    |
-| `ADC_ATTENUATION`               | 22 variants  | ESP32 ADC input attenuation setting; controls measurable voltage range.    |
-| `USE_POWERSAVE`                 | 22 variants  | Enables aggressive power-save mode (deep sleep, reduced poll intervals).   |
-| `SLEEP_TIME`                    | 22 variants  | Default light-sleep duration in milliseconds between wakeups.              |
-| `PIN_POWER_EN`                  | 20 variants  | GPIO to assert to enable a board power rail or load switch.                |
-| `BATTERY_SENSE_SAMPLES`         | 12 variants  | Number of ADC samples to average for a stable battery reading.             |
-| `BATTERY_LPCOMP_THRESHOLD`      | 6 variants   |                                                                            |
+| `BATTERY_PIN`                   | 155 variants | ADC input GPIO connected to the battery voltage divider.                   |
+| `ADC_MULTIPLIER`                | 155 variants | Floating-point scale factor to convert raw ADC reading to battery voltage. |
+| `BATTERY_SENSE_RESOLUTION_BITS` | 84 variants  | ADC resolution in bits used for battery voltage sampling.                  |
+| `ADC_CHANNEL`                   | 83 variants  | ADC channel enum or number for the battery sense input.                    |
+| `ADC_RESOLUTION`                | 66 variants  | Board-level ADC resolution definition, referenced by other power macros.   |
+| `BATTERY_SENSE_RESOLUTION`      | 58 variants  | Alias for the effective ADC resolution for battery sense.                  |
+| `ADC_CTRL`                      | 42 variants  | GPIO that enables or gates the ADC voltage-divider circuit.                |
+| `ADC_CTRL_ENABLED`              | 40 variants  | Logic level (HIGH or LOW) that turns on the ADC control switch.            |
+| `USE_POWERSAVE`                 | 28 variants  | Enables aggressive power-save mode (deep sleep, reduced poll intervals).   |
+| `SLEEP_TIME`                    | 28 variants  | Default light-sleep duration in milliseconds between wakeups.              |
+| `ADC_ATTENUATION`               | 24 variants  | ESP32 ADC input attenuation setting; controls measurable voltage range.    |
+| `EXT_NOTIFY_OUT`                | 24 variants  | GPIO output used to signal an external LED or buzzer for notifications.    |
+| `PIN_POWER_EN`                  | 21 variants  | GPIO to assert to enable a board power rail or load switch.                |
+| `BATTERY_SENSE_SAMPLES`         | 13 variants  | Number of ADC samples to average for a stable battery reading.             |
+| `BATTERY_LPCOMP_THRESHOLD`      | 11 variants  |                                                                            |
 
 ### Connectivity/Other
 
-| Macro             | Used in     | Description                                                         |
-| ----------------- | ----------- | ------------------------------------------------------------------- |
-| `HAS_TOUCHSCREEN` | 20 variants | Set to 1 for boards with a capacitive or resistive touch panel.     |
-| `HAS_NEOPIXEL`    | 14 variants | Set to 1 if the board has addressable RGB LEDs (WS2812 / NeoPixel). |
-| `PCF8563_RTC`     | 12 variants | I2C address of the PCF8563 real-time clock IC.                      |
-| `HAS_ETHERNET`    | 12 variants | Set to 1 for boards with a wired Ethernet interface.                |
-| `HAS_I2S`         | 7 variants  | Set to 1 if I2S audio output is present.                            |
-| `PCF85063_RTC`    | 2 variants  | I2C address of the PCF85063 real-time clock IC.                     |
-| `NFC_INT`         | 2 variants  | Interrupt pin from the NFC controller IC.                           |
-| `NFC_CS`          | 2 variants  | SPI chip-select for the NFC controller.                             |
-| `USE_XL9555`      | 2 variants  | Enables the XL9555 16-bit I2C GPIO expander driver.                 |
-| `EXPANDS_DRV_EN`  | 2 variants  | GPIO expander pin used to enable the haptic driver.                 |
-| `EXPANDS_AMP_EN`  | 2 variants  | GPIO expander pin used to power-on the audio amplifier.             |
-| `EXPANDS_KB_RST`  | 2 variants  | GPIO expander pin used to reset the keyboard controller.            |
-| `EXPANDS_LORA_EN` | 2 variants  | GPIO expander pin used to power-gate the LoRa radio.                |
-| `EXPANDS_GPS_EN`  | 2 variants  | GPIO expander pin used to power-gate the GPS module.                |
-| `EXPANDS_NFC_EN`  | 2 variants  | GPIO expander pin used to power-gate the NFC controller.            |
+| Macro                 | Used in     | Description                                                         |
+| --------------------- | ----------- | ------------------------------------------------------------------- |
+| `HAS_TOUCHSCREEN`     | 27 variants | Set to 1 for boards with a capacitive or resistive touch panel.     |
+| `PCF8563_RTC`         | 19 variants | I2C address of the PCF8563 real-time clock IC.                      |
+| `HAS_ETHERNET`        | 16 variants | Set to 1 for boards with a wired Ethernet interface.                |
+| `HAS_NEOPIXEL`        | 15 variants | Set to 1 if the board has addressable RGB LEDs (WS2812 / NeoPixel). |
+| `HAS_I2S`             | 12 variants | Set to 1 if I2S audio output is present.                            |
+| `PCF85063_RTC`        | 5 variants  | I2C address of the PCF85063 real-time clock IC.                     |
+| `EXPANDS_BTN_WAKE_UP` | 2 variants  |                                                                     |
+| `EXPANDS_I2C_0_INT`   | 2 variants  |                                                                     |
+| `EXPANDS_LED_USER`    | 2 variants  |                                                                     |
+| `EXPANDS_LCD_PWR_EN`  | 2 variants  |                                                                     |
+| `EXPANDS_LCD_RST`     | 2 variants  |                                                                     |
+| `EXPANDS_LCD_CS`      | 2 variants  |                                                                     |
+| `EXPANDS_TP_RST`      | 2 variants  |                                                                     |
+| `EXPANDS_TP_INT`      | 2 variants  |                                                                     |
+| `EXPANDS_SD_PWR_EN`   | 2 variants  |                                                                     |
 
 ### Other
 
-| Macro                | Used in     | Description                                                                |
-| -------------------- | ----------- | -------------------------------------------------------------------------- |
-| `LED_POWER`          | 97 variants | GPIO for the status LED, defines the LED pin number.                       |
-| `LED_STATE_ON`       | 92 variants | Logic level (HIGH or LOW) that turns the status LED on.                    |
-| `PIN_SERIAL1_RX`     | 69 variants | Secondary UART RX pin (used for accessories, GPS on some boards).          |
-| `PIN_SERIAL1_TX`     | 69 variants | Secondary UART TX pin.                                                     |
-| `PIN_WIRE_SDA`       | 67 variants | Arduino-framework I2C SDA pin alias (nRF52 / RP2040 style).                |
-| `PIN_WIRE_SCL`       | 67 variants | Arduino-framework I2C SCL pin alias.                                       |
-| `PIN_LED1`           | 65 variants | First LED GPIO pin in the nRF52 Arduino BSP pin table.                     |
-| `VARIANT_MCK`        | 65 variants | Crystal oscillator frequency in Hz for nRF52 variant clock configuration.  |
-| `PINS_COUNT`         | 65 variants | Total number of GPIO pins defined in the Arduino BSP variant table.        |
-| `NUM_DIGITAL_PINS`   | 65 variants | Count of digital-capable pins in the BSP variant table.                    |
-| `NUM_ANALOG_INPUTS`  | 65 variants | Count of analog-input pins in the BSP variant table.                       |
-| `NUM_ANALOG_OUTPUTS` | 65 variants | Count of analog-output (DAC) pins in the BSP variant table.                |
-| `LED_BLUE`           | 63 variants | GPIO number of the blue status LED (typical on nRF52 and RP2040 boards).   |
-| `USE_LFXO`           | 60 variants | Instructs the nRF52 BSP to use the low-frequency crystal oscillator.       |
-| `BUTTON_NEED_PULLUP` | 54 variants | Enables internal pull-up on the button GPIO (duplicate entry for clarity). |
+| Macro                | Used in      | Description                                                               |
+| -------------------- | ------------ | ------------------------------------------------------------------------- |
+| `LED_STATE_ON`       | 113 variants | Logic level (HIGH or LOW) that turns the status LED on.                   |
+| `LED_POWER`          | 104 variants | GPIO for the status LED, defines the LED pin number.                      |
+| `PIN_SERIAL1_RX`     | 89 variants  | Secondary UART RX pin (used for accessories, GPS on some boards).         |
+| `PIN_SERIAL1_TX`     | 89 variants  | Secondary UART TX pin.                                                    |
+| `PIN_WIRE_SDA`       | 86 variants  | Arduino-framework I2C SDA pin alias (nRF52 / RP2040 style).               |
+| `PIN_WIRE_SCL`       | 86 variants  | Arduino-framework I2C SCL pin alias.                                      |
+| `VARIANT_MCK`        | 84 variants  | Crystal oscillator frequency in Hz for nRF52 variant clock configuration. |
+| `PINS_COUNT`         | 84 variants  | Total number of GPIO pins defined in the Arduino BSP variant table.       |
+| `NUM_DIGITAL_PINS`   | 84 variants  | Count of digital-capable pins in the BSP variant table.                   |
+| `NUM_ANALOG_INPUTS`  | 84 variants  | Count of analog-input pins in the BSP variant table.                      |
+| `NUM_ANALOG_OUTPUTS` | 84 variants  | Count of analog-output (DAC) pins in the BSP variant table.               |
+| `PIN_LED1`           | 81 variants  | First LED GPIO pin in the nRF52 Arduino BSP pin table.                    |
+| `LED_BLUE`           | 78 variants  | GPIO number of the blue status LED (typical on nRF52 and RP2040 boards).  |
+| `USE_LFXO`           | 77 variants  | Instructs the nRF52 BSP to use the low-frequency crystal oscillator.      |
+| `PIN_SERIAL2_RX`     | 72 variants  |                                                                           |
 
 ## Architecture and Environment Inventory
 
@@ -246,7 +246,8 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 
 | Environment     | Display Name     | HW Model | HW Slug     | Variant Dir                      | Common Categories                                |
 | --------------- | ---------------- | -------- | ----------- | -------------------------------- | ------------------------------------------------ |
-| m5stack-unitc6l | M5Stack Unit C6L | 111      | M5STACK_C6L | variants/esp32c6/m5stack_unitc6l | Display:2, Radio:14, GPS:3, Connectivity/Other:1 |
+| heltec-rcc6     | Heltec RCC6      | 143      | HELTEC_RCC6 | variants/esp32c6/heltec_rcc6     | Display:21, Radio:14, Input:1, GPS:1, Power:5    |
+| m5stack-unitc6l | M5Stack Unit C6L | 111      | M5STACK_C6L | variants/esp32c6/m5stack_unitc6l | Display:4, Radio:14, GPS:3, Connectivity/Other:1 |
 | tlora-c6        | LilyGo T3-C6     | 83       | TLORA_C6    | variants/esp32c6/tlora_c6        | Radio:14                                         |
 
 ### esp32-s3
@@ -257,6 +258,7 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | CDEBYTE_EoRa-S3                  | EBYTE EoRa-S3                 | 61       | CDEBYTE_EORA_S3              | variants/esp32s3/CDEBYTE_EoRa-S3              | Display:2, Radio:13, Input:1, Power:3                                |
 | EBYTE_ESP32-S3                   |                               |          |                              | variants/esp32s3/EBYTE_ESP32-S3               | Display:1, Radio:26, Input:1, GPS:5, Power:1                         |
 | ESP32-S3-Pico                    |                               |          |                              | variants/esp32s3/esp32-s3-pico                | Display:6, Radio:18, Input:2, GPS:1, Power:4, Connectivity/Other:1   |
+| axiometa-genesis-mini            | Axiometa Genesis Mini         | 148      | AXIOMETA_GENESIS_MINI        | variants/esp32s3/axiometa_genesis_mini        | Display:11, Radio:14, Input:10, GPS:1, Power:6, Connectivity/Other:1 |
 | bpi_picow_esp32_s3               |                               |          |                              | variants/esp32s3/bpi_picow_esp32_s3           | Display:1, Radio:25, Input:1, GPS:1                                  |
 | crowpanel-esp32s3-2-epaper       |                               |          |                              | variants/esp32s3/crowpanel-esp32s3-5-epaper   | Display:6, Radio:21, Input:1, GPS:1, Power:1                         |
 | crowpanel-esp32s3-4-epaper       |                               |          |                              | variants/esp32s3/crowpanel-esp32s3-5-epaper   | Display:6, Radio:21, Input:1, GPS:1, Power:1                         |
@@ -266,6 +268,7 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | elecrow-adv-35-tft               | Crowpanel Adv 3.5 TFT         | 97       | CROWPANEL                    | variants/esp32s3/elecrow_panel                | Display:1, Radio:21, GPS:6, Power:2                                  |
 | elecrow-adv1-43-50-70-tft        | Crowpanel Adv 4.3/5.0/7.0 TFT | 97       | CROWPANEL                    | variants/esp32s3/elecrow_panel                | Display:1, Radio:21, GPS:6, Power:2                                  |
 | hackaday-communicator            |                               |          |                              | variants/esp32s3/hackaday-communicator        | Display:12, Radio:14, Input:1, GPS:1, Power:2                        |
+| heltec-rc32                      | Heltec RC32                   | 141      | HELTEC_RC32                  | variants/esp32s3/heltec_rc32                  | Display:21, Radio:14, Input:1, GPS:8, Power:6                        |
 | heltec-v3                        | Heltec V3                     | 43       | HELTEC_V3                    | variants/esp32s3/heltec_v3                    | Display:1, Radio:16, Input:1, Power:6                                |
 | heltec-v4                        | Heltec V4                     | 110      | HELTEC_V4                    | variants/esp32s3/heltec_v4                    | Display:1, Radio:21, Input:1, GPS:10, Power:6                        |
 | heltec-v4-r8-oled                | Heltec V4 R8                  | 132      | HELTEC_V4_R8                 | variants/esp32s3/heltec_v4_r8                 | Display:1, Radio:19, Input:1, GPS:7, Power:4                         |
@@ -289,6 +292,8 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | link32-s3-v1                     |                               |          |                              | variants/esp32s3/link32_s3_v1                 | Display:1, Radio:16, Input:2, Power:4, Connectivity/Other:1          |
 | m5stack-cardputer-adv            |                               |          |                              | variants/esp32s3/m5stack_cardputer_adv        | Display:6, Radio:17, Input:2, GPS:4, Power:3, Connectivity/Other:2   |
 | m5stack-cores3                   |                               |          |                              | variants/esp32s3/m5stack_cores3               | Radio:11, Power:1                                                    |
+| makerfabs_nomad_terminal         | Makerfabs Nomad Terminal      | 149      | MAKERFABS_NOMAD_TERMINAL     | variants/esp32s3/makerfabs_nomad_terminal     | Display:10, Radio:14, Input:1, GPS:5, Power:1, Connectivity/Other:2  |
+| makerfabs_nomad_terminal-tft     |                               |          |                              | variants/esp32s3/makerfabs_nomad_terminal     | Display:10, Radio:14, Input:1, GPS:5, Power:1, Connectivity/Other:2  |
 | mesh-tab-3-2-IPS-capacitive      |                               |          |                              | variants/esp32s3/mesh-tab                     | Radio:18, Input:1, GPS:2, Power:5, Connectivity/Other:1              |
 | mesh-tab-3-2-IPS-resistive       |                               |          |                              | variants/esp32s3/mesh-tab                     | Radio:18, Input:1, GPS:2, Power:5, Connectivity/Other:1              |
 | mesh-tab-3-2-TN-resistive        |                               |          |                              | variants/esp32s3/mesh-tab                     | Radio:18, Input:1, GPS:2, Power:5, Connectivity/Other:1              |
@@ -296,6 +301,8 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | mesh-tab-3-5-IPS-resistive       |                               |          |                              | variants/esp32s3/mesh-tab                     | Radio:18, Input:1, GPS:2, Power:5, Connectivity/Other:1              |
 | mesh-tab-3-5-TN-resistive        |                               |          |                              | variants/esp32s3/mesh-tab                     | Radio:18, Input:1, GPS:2, Power:5, Connectivity/Other:1              |
 | mesh-tab-4-0-IPS-capacitive      |                               |          |                              | variants/esp32s3/mesh-tab                     | Radio:18, Input:1, GPS:2, Power:5, Connectivity/Other:1              |
+| meshnology_w10                   | Meshnology W10                | 140      | MESHNOLOGY_W10               | variants/esp32s3/meshnology-w10               | Display:13, Radio:18, Input:1, GPS:4, Power:1, Connectivity/Other:2  |
+| meshnology_w12                   | Meshnology W12                | 145      | MESHNOLOGY_W12               | variants/esp32s3/meshnology-w12               | Display:1, Radio:5, Input:1, Power:6                                 |
 | mini-epaper-s3                   | LILYGO Mini ePaper S3 E-Ink   | 125      | MINI_EPAPER_S3               | variants/esp32s3/mini-epaper-s3               | Display:8, Radio:12, Input:5, GPS:1, Power:3, Connectivity/Other:1   |
 | mini-epaper-s3-inkhud            |                               |          |                              | variants/esp32s3/mini-epaper-s3               | Display:8, Radio:12, Input:5, GPS:1, Power:3, Connectivity/Other:1   |
 | my-esp32s3-diy-eink              |                               |          |                              | variants/esp32s3/diy/my_esp32s3_diy_eink      | Display:6, Radio:17, Input:1, GPS:1, Connectivity/Other:1            |
@@ -308,12 +315,16 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | rak3312                          | RAK3312                       | 106      | RAK3312                      | variants/esp32s3/rak3312                      | Radio:13, GPS:3, Power:5                                             |
 | rak_wismesh_tap_v2               | RAK WisMesh Tap V2            | 116      | WISMESH_TAP_V2               | variants/esp32s3/rak_wismesh_tap_v2           | Radio:13, Input:1, GPS:3, Power:4                                    |
 | rak_wismesh_tap_v2-tft           |                               |          |                              | variants/esp32s3/rak_wismesh_tap_v2           | Radio:13, Input:1, GPS:3, Power:4                                    |
-| seeed-sensecap-indicator         | Seeed SenseCAP Indicator      | 70       | SENSECAP_INDICATOR           | variants/esp32s3/seeed-sensecap-indicator     | Display:12, Radio:17, Input:1, GPS:4, Connectivity/Other:1           |
-| seeed-sensecap-indicator-tft     |                               |          |                              | variants/esp32s3/seeed-sensecap-indicator     | Display:12, Radio:17, Input:1, GPS:4, Connectivity/Other:1           |
-| seeed-xiao-s3                    | Seeed Xiao ESP32-S3           | 81       | SEEED_XIAO_S3                | variants/esp32s3/seeed_xiao_s3                | Radio:16, Input:1, GPS:6, Power:3                                    |
+| seeed-sensecap-indicator         | Seeed SenseCAP Indicator      | 70       | SENSECAP_INDICATOR           | variants/esp32s3/seeed-sensecap-indicator     | Display:12, Radio:18, Input:1, GPS:2, Connectivity/Other:1           |
+| seeed-sensecap-indicator-tft     |                               |          |                              | variants/esp32s3/seeed-sensecap-indicator     | Display:12, Radio:18, Input:1, GPS:2, Connectivity/Other:1           |
+| seeed-xiao-s3                    | Seeed Xiao ESP32-S3           | 81       | SEEED_XIAO_S3                | variants/esp32s3/seeed_xiao_s3                | Radio:16, Input:1, GPS:6, Power:2                                    |
+| seeed_wio_tracker_L2             | Seeed Wio Tracker L2          | 137      | SEEED_WIO_TRACKER_L2         | variants/esp32s3/seeed_wio_tracker_L2         | Display:4, Radio:16, Input:1, GPS:5, Power:7, Connectivity/Other:18  |
+| seeed_wio_tracker_L2-tft         |                               |          |                              | variants/esp32s3/seeed_wio_tracker_L2         | Display:4, Radio:16, Input:1, GPS:5, Power:7, Connectivity/Other:18  |
 | station-g2                       | Station G2                    | 31       | STATION_G2                   | variants/esp32s3/station-g2                   | Radio:1, Power:4                                                     |
 | station-g3                       | Station G3                    | 134      | STATION_G3                   | variants/esp32s3/station-g3                   | Radio:1, Power:4                                                     |
-| t-beam-1w                        | LILYGO T-Beam 1W              | 122      | TBEAM_1_WATT                 | variants/esp32s3/t-beam-1w                    | Display:3, Radio:19, Input:2, GPS:6, Power:5                         |
+| t-beam-1w                        | LILYGO T-Beam 1W              | 122      | TBEAM_1_WATT                 | variants/esp32s3/t-beam-1w                    | Display:3, Radio:24, Input:2, GPS:6, Power:5                         |
+| t-beam-bpf                       | LILYGO T-Beam BPF             | 124      | TBEAM_BPF                    | variants/esp32s3/t-beam-bpf                   | Display:3, Radio:12, Input:2, GPS:5, Power:1                         |
+| t-connect-pro                    | LILYGO T-Connect Pro          | 147      | T_CONNECT_PRO                | variants/esp32s3/t-connect-pro                | Display:10, Radio:13, Input:1, GPS:1, Power:1, Connectivity/Other:2  |
 | t-deck                           | LILYGO T-Deck                 | 50       | T_DECK                       | variants/esp32s3/t-deck                       | Display:11, Radio:17, Input:3, GPS:3, Power:5, Connectivity/Other:2  |
 | t-deck-pro                       | LILYGO T-Deck Pro             | 102      | T_DECK_PRO                   | variants/esp32s3/t-deck-pro                   | Display:6, Radio:18, Input:2, GPS:7, Power:5, Connectivity/Other:1   |
 | t-deck-pro-v1_1                  | LILYGO T-Deck Pro             | 102      | T_DECK_PRO                   | variants/esp32s3/t-deck-pro-v1_1              | Display:7, Radio:18, Input:2, GPS:7, Power:5, Connectivity/Other:1   |
@@ -321,19 +332,25 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | t-energy-s3_e22                  |                               |          |                              | variants/esp32s3/diy/t-energy-s3_e22          | Display:1, Radio:18, Input:1, GPS:3, Power:3                         |
 | t-eth-elite                      |                               |          |                              | variants/esp32s3/t-eth-elite                  | Display:1, Radio:34, Input:1, GPS:5, Connectivity/Other:1            |
 | t-watch-s3                       | LILYGO T-Watch S3             | 51       | T_WATCH_S3                   | variants/esp32s3/t-watch-s3                   | Display:12, Radio:17, Input:1, GPS:5, Power:3, Connectivity/Other:3  |
-| t5s3_epaper_inkhud               |                               |          |                              | variants/esp32s3/t5s3_epaper                  | Display:1, Radio:21, Input:3, GPS:2, Power:5, Connectivity/Other:3   |
+| t-watch-ultra                    | T-Watch Ultra                 | 114      | T_WATCH_ULTRA                | variants/esp32s3/t-watch-ultra                | Display:12, Radio:16, Input:1, GPS:5, Power:3, Connectivity/Other:3  |
+| t-watch-ultra-tft                |                               |          |                              | variants/esp32s3/t-watch-ultra                | Display:12, Radio:16, Input:1, GPS:5, Power:3, Connectivity/Other:3  |
+| t5s3_epaper_inkhud               | LilyGo T5 E-paper S3 Pro V2   |          |                              | variants/esp32s3/t5s3_epaper                  | Display:1, Radio:21, Input:3, GPS:2, Power:5, Connectivity/Other:3   |
 | tbeam-s3-core                    | LILYGO T-Beam Supreme         | 12       | LILYGO_TBEAM_S3_CORE         | variants/esp32s3/tbeam-s3-core                | Display:1, Radio:29, Input:1, GPS:4, Power:1, Connectivity/Other:2   |
 | thinknode_g3                     |                               |          |                              | variants/esp32s3/ELECROW-ThinkNode-G3         | Radio:12, Input:1, GPS:1, Power:1, Connectivity/Other:1              |
 | thinknode_m2                     | ThinkNode M2                  | 90       | THINKNODE_M2                 | variants/esp32s3/ELECROW-ThinkNode-M2         | Display:2, Radio:14, Input:2, GPS:1, Power:6                         |
-| thinknode_m5                     | ThinkNode M5                  | 107      | THINKNODE_M5                 | variants/esp32s3/ELECROW-ThinkNode-M5         | Display:6, Radio:14, Input:2, GPS:8, Power:4, Connectivity/Other:1   |
+| thinknode_m5                     | ThinkNode M5                  | 107      | THINKNODE_M5                 | variants/esp32s3/ELECROW-ThinkNode-M5         | Display:6, Radio:14, Input:2, GPS:8, Power:3, Connectivity/Other:1   |
+| thinknode_m5-inkhud              |                               |          |                              | variants/esp32s3/ELECROW-ThinkNode-M5         | Display:6, Radio:14, Input:2, GPS:8, Power:3, Connectivity/Other:1   |
 | thinknode_m7                     |                               |          |                              | variants/esp32s3/ELECROW-ThinkNode-M7         | Display:1, Radio:6, Input:1, GPS:1, Connectivity/Other:1             |
-| tlora-pager                      | LILYGO T-LoRa Pager           | 103      | T_LORA_PAGER                 | variants/esp32s3/tlora-pager                  | Display:10, Radio:30, Input:6, GPS:5, Power:5, Connectivity/Other:17 |
-| tlora-pager-tft                  |                               |          |                              | variants/esp32s3/tlora-pager                  | Display:10, Radio:30, Input:6, GPS:5, Power:5, Connectivity/Other:17 |
+| thinknode_m9                     |                               |          |                              | variants/esp32s3/ELECROW-ThinkNode-M9         | Display:14, Radio:8, Input:3, GPS:10, Power:6, Connectivity/Other:1  |
+| thinknode_m9-tft                 |                               |          |                              | variants/esp32s3/ELECROW-ThinkNode-M9         | Display:14, Radio:8, Input:3, GPS:10, Power:6, Connectivity/Other:1  |
+| tlora-pager                      | LILYGO T-LoRa Pager           | 103      | T_LORA_PAGER                 | variants/esp32s3/tlora-pager                  | Display:10, Radio:30, Input:6, GPS:5, Power:5, Connectivity/Other:16 |
+| tlora-pager-tft                  |                               |          |                              | variants/esp32s3/tlora-pager                  | Display:10, Radio:30, Input:6, GPS:5, Power:5, Connectivity/Other:16 |
 | tlora-t3s3-epaper                | LILYGO T-LoRa T3-S3 E-Ink     | 16       | TLORA_T3_S3                  | variants/esp32s3/tlora_t3s3_epaper            | Display:6, Radio:28, Input:1, GPS:3, Power:3                         |
 | tlora-t3s3-epaper-inkhud         |                               |          |                              | variants/esp32s3/tlora_t3s3_epaper            | Display:6, Radio:28, Input:1, GPS:3, Power:3                         |
 | tlora-t3s3-v1                    | LILYGO T-LoRa T3-S3           | 16       | TLORA_T3_S3                  | variants/esp32s3/tlora_t3s3_v1                | Display:1, Radio:36, Input:1, Power:3                                |
 | unphone                          | unPhone                       | 59       | UNPHONE                      | variants/esp32s3/unphone                      | Display:9, Radio:9, Input:3, GPS:1, Power:2, Connectivity/Other:1    |
 | unphone-tft                      |                               |          |                              | variants/esp32s3/unphone                      | Display:9, Radio:9, Input:3, GPS:1, Power:2, Connectivity/Other:1    |
+| visualizer-hub75                 |                               |          |                              | variants/esp32s3/visualizer-hub75             | Display:3, Radio:19, Input:1                                         |
 
 ### esp32s2
 
@@ -343,92 +360,117 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 
 ### native
 
-| Environment        | Display Name | HW Model | HW Slug | Variant Dir                         | Common Categories |
-| ------------------ | ------------ | -------- | ------- | ----------------------------------- | ----------------- |
-| buildroot          |              |          |         | variants/native/portduino-buildroot | Display:2, GPS:1  |
-| coverage           |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
-| native             |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
-| native-fb          |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
-| native-macos       |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
-| native-macos-debug |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
-| native-tft         |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
-| native-tft-debug   |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| Environment                  | Display Name | HW Model | HW Slug | Variant Dir                         | Common Categories |
+| ---------------------------- | ------------ | -------- | ------- | ----------------------------------- | ----------------- |
+| buildroot                    |              |          |         | variants/native/portduino-buildroot | Display:2, GPS:1  |
+| coverage                     |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| coverage-channel-table       |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| coverage-event-policy        |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native                       |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-fb                    |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-macos                 |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-macos-debug           |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-macos-tft             |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-tft                   |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-tft-debug             |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-wasm                  |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-windows               |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-windows-channel-table |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
+| native-windows-event-policy  |              |          |         | variants/native/portduino           | Display:2, GPS:1  |
 
 ### nrf52840
 
-| Environment                      | Display Name               | HW Model | HW Slug                   | Variant Dir                                    | Common Categories                                         |
-| -------------------------------- | -------------------------- | -------- | ------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
-| ME25LS01-4Y10TD                  |                            |          |                           | variants/nrf52840/ME25LS01-4Y10TD              | Radio:8, Input:1, GPS:8, Power:4                          |
-| ME25LS01-4Y10TD_e-ink            |                            |          |                           | variants/nrf52840/ME25LS01-4Y10TD_e-ink        | Display:6, Radio:8, Input:1, GPS:8, Power:4               |
-| TWC_mesh_v4                      |                            |          |                           | variants/nrf52840/TWC_mesh_v4                  | Display:1, Radio:7, GPS:4, Power:5                        |
-| canaryone                        | Canary One                 | 29       | CANARYONE                 | variants/nrf52840/canaryone                    | Radio:7, GPS:8, Power:5                                   |
-| feather_diy                      |                            |          |                           | variants/nrf52840/feather_diy                  | Radio:17, Input:1                                         |
-| gat562_mesh_trial_tracker        |                            |          |                           | variants/nrf52840/gat562_mesh_trial_tracker    | Display:2, Radio:8, GPS:4, Power:5                        |
-| heltec-mesh-node-t096            | Heltec Mesh Node 096       | 127      | HELTEC_MESH_NODE_T096     | variants/nrf52840/heltec_mesh_node_t096        | Display:8, Radio:11, GPS:10, Power:9                      |
-| heltec-mesh-node-t1              | Heltec Mesh Node T1        | 133      | HELTEC_MESH_NODE_T1       | variants/nrf52840/heltec_mesh_node_t1          | Display:8, Radio:8, GPS:10, Power:9                       |
-| heltec-mesh-node-t114            | Heltec Mesh Node T114      | 69       | HELTEC_MESH_NODE_T114     | variants/nrf52840/heltec_mesh_node_t114        | Display:6, Radio:8, GPS:7, Power:8, Connectivity/Other:1  |
-| heltec-mesh-node-t114-inkhud     |                            |          |                           | variants/nrf52840/heltec_mesh_node_t114-inkhud | Display:6, Radio:8, GPS:7, Power:7, Connectivity/Other:1  |
-| heltec-mesh-pocket-10000         | Heltec Mesh Pocket         | 94       | HELTEC_MESH_POCKET        | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                        |
-| heltec-mesh-pocket-10000-inkhud  | Heltec Mesh Pocket         | 94       | HELTEC_MESH_POCKET        | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                        |
-| heltec-mesh-pocket-5000          | Heltec Mesh Pocket         | 94       | HELTEC_MESH_POCKET        | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                        |
-| heltec-mesh-pocket-5000-inkhud   | Heltec Mesh Pocket         | 94       | HELTEC_MESH_POCKET        | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                        |
-| heltec-mesh-solar                | Heltec MeshSolar           | 108      | HELTEC_MESH_SOLAR         | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                            |
-| heltec-mesh-solar-eink           |                            |          |                           | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                            |
-| heltec-mesh-solar-inkhud         |                            |          |                           | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                            |
-| heltec-mesh-solar-oled           |                            |          |                           | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                            |
-| heltec-mesh-solar-tft            |                            |          |                           | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                            |
-| makerpython_nrf52840_sx1280_eink |                            |          |                           | variants/nrf52840/MakePython_nRF52840_eink     | Display:6, Radio:6, GPS:4, Power:5                        |
-| makerpython_nrf52840_sx1280_oled |                            |          |                           | variants/nrf52840/MakePython_nRF52840_oled     | Radio:6, GPS:4, Power:5                                   |
-| meshlink                         |                            |          |                           | variants/nrf52840/meshlink                     | Display:6, Radio:7, Input:1, GPS:5, Power:5               |
-| meshlink_eink                    |                            |          |                           | variants/nrf52840/meshlink                     | Display:6, Radio:7, Input:1, GPS:5, Power:5               |
-| meshtiny                         |                            |          |                           | variants/nrf52840/meshtiny                     | Display:2, Radio:8, Input:5, Power:5                      |
-| minimesh_lite                    |                            |          |                           | variants/nrf52840/dls_Minimesh_Lite            | Radio:15, Input:1, GPS:4, Power:6                         |
-| monteops_hw1                     |                            |          |                           | variants/nrf52840/monteops_hw1                 | Radio:8, GPS:3, Power:5, Connectivity/Other:1             |
-| ms24sf1                          |                            |          |                           | variants/nrf52840/MS24SF1                      | Radio:8, Input:1, GPS:8, Power:4                          |
-| muzi-base                        | muzi BASE                  | 93       | MUZI_BASE                 | variants/nrf52840/muzi_base                    | Display:3, Radio:19, Input:1, GPS:4, Power:5              |
-| nano-g2-ultra                    | Nano G2 Ultra              | 18       | NANO_G2_ULTRA             | variants/nrf52840/nano-g2-ultra                | Display:1, Radio:7, GPS:4, Power:6, Connectivity/Other:1  |
-| nrf52_promicro_diy-inkhud        |                            |          |                           | variants/nrf52840/diy/nrf52_promicro_diy_tcxo  | Display:4, Radio:29, Input:1, GPS:4, Power:6              |
-| nrf52_promicro_diy_tcxo          | NRF52 Pro-micro DIY        | 63       | NRF52_PROMICRO_DIY        | variants/nrf52840/diy/nrf52_promicro_diy_tcxo  | Display:4, Radio:29, Input:1, GPS:4, Power:6              |
-| pca10059_diy_eink                |                            |          |                           | variants/nrf52840/Dongle_nRF52840-pca10059-v1  | Display:7, Radio:8, GPS:4, Power:5                        |
-| r1-neo                           | muzi R1 Neo                | 101      | MUZI_R1_NEO               | variants/nrf52840/r1-neo                       | Display:1, Radio:8, GPS:4, Power:5                        |
-| rak2560                          | RAK WisMesh Repeater       | 22       | WISMESH_HUB               | variants/nrf52840/rak2560                      | Display:6, Radio:8, GPS:2, Power:5                        |
-| rak3401-1watt                    | RAK3401 1W                 | 117      | RAK3401                   | variants/nrf52840/rak3401_1watt                | Display:6, Radio:12, GPS:3, Power:5                       |
-| rak4631                          | RAK WisBlock 4631          | 9        | RAK4631                   | variants/nrf52840/rak4631                      | Display:6, Radio:8, GPS:3, Power:7, Connectivity/Other:1  |
-| rak4631_dbg                      |                            |          |                           | variants/nrf52840/rak4631                      | Display:6, Radio:8, GPS:3, Power:7, Connectivity/Other:1  |
-| rak4631_eink                     |                            |          |                           | variants/nrf52840/rak4631_epaper               | Display:6, Radio:8, GPS:4, Power:5                        |
-| rak4631_eink_onrxtx              |                            |          |                           | variants/nrf52840/rak4631_epaper_onrxtx        | Display:6, Radio:8, Power:1                               |
-| rak4631_eth_gw                   |                            |          |                           | variants/nrf52840/rak4631_eth_gw               | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1  |
-| rak4631_eth_gw_dbg               |                            |          |                           | variants/nrf52840/rak4631_eth_gw               | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1  |
-| rak4631_nomadstar_meteor_pro     | NomadStar Meteor Pro       | 96       | NOMADSTAR_METEOR_PRO      | variants/nrf52840/rak4631_nomadstar_meteor_pro | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1  |
-| rak4631_nomadstar_meteor_pro_dbg |                            |          |                           | variants/nrf52840/rak4631_nomadstar_meteor_pro | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1  |
-| rak_wismeshtag                   | RAK WisMesh Tag            | 105      | WISMESH_TAG               | variants/nrf52840/rak_wismeshtag               | Display:7, Radio:8, GPS:4, Power:7                        |
-| rak_wismeshtap                   | RAK WisMesh Tap            | 84       | WISMESH_TAP               | variants/nrf52840/rak_wismeshtap               | Display:21, Radio:8, GPS:3, Power:7, Connectivity/Other:1 |
-| seeed_solar_node                 | Seeed SenseCAP Solar Node  | 95       | SEEED_SOLAR_NODE          | variants/nrf52840/seeed_solar_node             | Radio:9, Input:2, GPS:8, Power:3                          |
-| seeed_wio_tracker_L1             | Seeed Wio Tracker L1       | 99       | SEEED_WIO_TRACKER_L1      | variants/nrf52840/seeed_wio_tracker_L1         | Display:2, Radio:9, Input:1, GPS:7, Power:3               |
-| seeed_wio_tracker_L1_eink        | Seeed Wio Tracker L1 E-Ink | 100      | SEEED_WIO_TRACKER_L1_EINK | variants/nrf52840/seeed_wio_tracker_L1_eink    | Display:7, Radio:9, Input:1, GPS:7, Power:3               |
-| seeed_wio_tracker_L1_eink-inkhud |                            |          |                           | variants/nrf52840/seeed_wio_tracker_L1_eink    | Display:7, Radio:9, Input:1, GPS:7, Power:3               |
-| seeed_xiao_nrf52840_kit          | Seeed Xiao NRF52840 Kit    | 88       | XIAO_NRF52_KIT            | variants/nrf52840/seeed_xiao_nrf52840_kit      | Radio:19, Input:2, GPS:9, Power:6                         |
-| seeed_xiao_nrf52840_kit_i2c      |                            |          |                           | variants/nrf52840/seeed_xiao_nrf52840_kit      | Radio:19, Input:2, GPS:9, Power:6                         |
-| t-echo                           | LILYGO T-Echo              | 7        | T_ECHO                    | variants/nrf52840/t-echo                       | Display:7, Radio:8, GPS:7, Power:6, Connectivity/Other:1  |
-| t-echo-card                      |                            |          |                           | variants/nrf52840/t-echo-card                  | Display:5, Radio:9, GPS:11, Power:8                       |
-| t-echo-inkhud                    |                            |          |                           | variants/nrf52840/t-echo                       | Display:7, Radio:8, GPS:7, Power:6, Connectivity/Other:1  |
-| t-echo-lite                      | LILYGO T-Echo Lite         | 109      | T_ECHO_LITE               | variants/nrf52840/t-echo-lite                  | Display:6, Radio:9, GPS:10, Power:8                       |
-| t-echo-plus                      | LILYGO T-Echo Plus         | 33       | T_ECHO_PLUS               | variants/nrf52840/t-echo-plus                  | Display:8, Radio:8, GPS:7, Power:6                        |
-| thinknode_m1                     | ThinkNode M1               | 89       | THINKNODE_M1              | variants/nrf52840/ELECROW-ThinkNode-M1         | Display:7, Radio:8, Input:1, GPS:8, Power:8               |
-| thinknode_m1-inkhud              |                            |          |                           | variants/nrf52840/ELECROW-ThinkNode-M1         | Display:7, Radio:8, Input:1, GPS:8, Power:8               |
-| thinknode_m3                     | Elecrow ThinkNode M3       | 115      | THINKNODE_M3              | variants/nrf52840/ELECROW-ThinkNode-M3         | Radio:1, Input:2, GPS:9, Power:7, Connectivity/Other:1    |
-| thinknode_m4                     |                            |          |                           | variants/nrf52840/ELECROW-ThinkNode-M4         | Radio:8, GPS:12, Power:7                                  |
-| thinknode_m6                     | ThinkNode M6               | 120      | THINKNODE_M6              | variants/nrf52840/ELECROW-ThinkNode-M6         | Radio:7, GPS:9, Power:9, Connectivity/Other:1             |
-| tracker-t1000-e                  | Seeed SenseCAP T1000-E     | 71       | TRACKER_T1000_E           | variants/nrf52840/tracker-t1000-e              | Display:1, Radio:8, Input:1, GPS:13, Power:5              |
-| wio-sdk-wm1110                   |                            |          |                           | variants/nrf52840/wio-sdk-wm1110               | Radio:8, Input:1                                          |
-| wio-t1000-s                      |                            |          |                           | variants/nrf52840/wio-t1000-s                  | Radio:8, Input:1, GPS:12, Power:4                         |
-| wio-tracker-wm1110               | Seeed Wio WM1110 Tracker   | 21       | WIO_WM1110                | variants/nrf52840/wio-tracker-wm1110           | Radio:8, Input:1, GPS:3                                   |
+| Environment                      | Display Name                            | HW Model | HW Slug                     | Variant Dir                                    | Common Categories                                                   |
+| -------------------------------- | --------------------------------------- | -------- | --------------------------- | ---------------------------------------------- | ------------------------------------------------------------------- |
+| ME25LS01-4Y10TD                  |                                         |          |                             | variants/nrf52840/ME25LS01-4Y10TD              | Radio:8, Input:1, GPS:8, Power:3                                    |
+| ME25LS01-4Y10TD_e-ink            |                                         |          |                             | variants/nrf52840/ME25LS01-4Y10TD_e-ink        | Display:6, Radio:8, Input:1, GPS:8, Power:3                         |
+| TWC_mesh_v4                      |                                         |          |                             | variants/nrf52840/TWC_mesh_v4                  | Display:1, Radio:7, GPS:4, Power:5                                  |
+| canaryone                        | Canary One                              | 29       | CANARYONE                   | variants/nrf52840/canaryone                    | Radio:7, GPS:8, Power:5                                             |
+| feather_diy                      |                                         |          |                             | variants/nrf52840/feather_diy                  | Radio:17, Input:1                                                   |
+| gat562_mesh_trial_tracker        |                                         |          |                             | variants/nrf52840/gat562_mesh_trial_tracker    | Display:2, Radio:8, GPS:4, Power:5                                  |
+| heltec-mesh-node-t096            | Heltec Mesh Node 096                    | 127      | HELTEC_MESH_NODE_T096       | variants/nrf52840/heltec_mesh_node_t096        | Display:9, Radio:11, GPS:10, Power:9                                |
+| heltec-mesh-node-t1              | Heltec Mesh Node T1                     | 133      | HELTEC_MESH_NODE_T1         | variants/nrf52840/heltec_mesh_node_t1          | Display:8, Radio:8, GPS:10, Power:7                                 |
+| heltec-mesh-node-t114            | Heltec Mesh Node T114                   | 69       | HELTEC_MESH_NODE_T114       | variants/nrf52840/heltec_mesh_node_t114        | Display:6, Radio:8, GPS:7, Power:8, Connectivity/Other:1            |
+| heltec-mesh-node-t114-inkhud     |                                         |          |                             | variants/nrf52840/heltec_mesh_node_t114-inkhud | Display:6, Radio:8, GPS:7, Power:7, Connectivity/Other:1            |
+| heltec-mesh-pocket-10000         | Heltec Mesh Pocket                      | 94       | HELTEC_MESH_POCKET          | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                                  |
+| heltec-mesh-pocket-10000-inkhud  | Heltec Mesh Pocket                      | 94       | HELTEC_MESH_POCKET          | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                                  |
+| heltec-mesh-pocket-5000          | Heltec Mesh Pocket                      | 94       | HELTEC_MESH_POCKET          | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                                  |
+| heltec-mesh-pocket-5000-inkhud   | Heltec Mesh Pocket                      | 94       | HELTEC_MESH_POCKET          | variants/nrf52840/heltec_mesh_pocket           | Display:6, Radio:8, GPS:1, Power:7                                  |
+| heltec-mesh-solar                | Heltec MeshSolar                        | 108      | HELTEC_MESH_SOLAR           | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                                      |
+| heltec-mesh-solar-eink           |                                         |          |                             | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                                      |
+| heltec-mesh-solar-inkhud         |                                         |          |                             | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                                      |
+| heltec-mesh-solar-oled           |                                         |          |                             | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                                      |
+| heltec-mesh-solar-tft            |                                         |          |                             | variants/nrf52840/heltec_mesh_solar            | Radio:8, GPS:6                                                      |
+| heltec-mesh-tower-v2             | Heltec MeshTower V2                     | 139      | HELTEC_MESH_TOWER_V2        | variants/nrf52840/heltec_mesh_tower_v2         | Radio:11, GPS:10, Power:9                                           |
+| heltec-rc52                      | Heltec RC52                             | 142      | HELTEC_RC52                 | variants/nrf52840/heltec_rc52                  | Display:19, Radio:8, GPS:9, Power:7                                 |
+| makerpython_nrf52840_sx1280_eink |                                         |          |                             | variants/nrf52840/MakePython_nRF52840_eink     | Display:6, Radio:6, GPS:4, Power:5                                  |
+| makerpython_nrf52840_sx1280_oled |                                         |          |                             | variants/nrf52840/MakePython_nRF52840_oled     | Radio:6, GPS:4, Power:5                                             |
+| meshlink                         |                                         |          |                             | variants/nrf52840/meshlink                     | Display:6, Radio:7, Input:1, GPS:5, Power:5                         |
+| meshlink_eink                    |                                         |          |                             | variants/nrf52840/meshlink                     | Display:6, Radio:7, Input:1, GPS:5, Power:5                         |
+| meshtiny                         |                                         |          |                             | variants/nrf52840/meshtiny                     | Display:2, Radio:8, Input:5, Power:5                                |
+| minimesh_lite                    |                                         |          |                             | variants/nrf52840/dls_Minimesh_Lite            | Radio:15, Input:1, GPS:4, Power:6                                   |
+| monteops_hw1                     |                                         |          |                             | variants/nrf52840/monteops_hw1                 | Radio:8, GPS:3, Power:5, Connectivity/Other:1                       |
+| ms24sf1                          |                                         |          |                             | variants/nrf52840/MS24SF1                      | Radio:8, Input:1, GPS:8, Power:3                                    |
+| muzi-base                        | muzi BASE                               | 93       | MUZI_BASE                   | variants/nrf52840/muzi_base                    | Display:3, Radio:19, Input:1, GPS:4, Power:5                        |
+| nano-g2-ultra                    | Nano G2 Ultra                           | 18       | NANO_G2_ULTRA               | variants/nrf52840/nano-g2-ultra                | Display:1, Radio:7, GPS:4, Power:6, Connectivity/Other:1            |
+| nodara                           | Nodara                                  | 151      | NODARA                      | variants/nrf52840/nodara                       | Display:17, Radio:10, Input:1, GPS:9, Power:6, Connectivity/Other:1 |
+| nrf52_promicro_diy-easypromicro  |                                         |          |                             | variants/nrf52840/diy/nrf52_promicro_diy_tcxo  | Display:5, Radio:52, Input:2, GPS:7, Power:6                        |
+| nrf52_promicro_diy-inkhud        |                                         |          |                             | variants/nrf52840/diy/nrf52_promicro_diy_tcxo  | Display:5, Radio:52, Input:2, GPS:7, Power:6                        |
+| nrf52_promicro_diy-sx1280        |                                         |          |                             | variants/nrf52840/diy/nrf52_promicro_diy_tcxo  | Display:5, Radio:52, Input:2, GPS:7, Power:6                        |
+| nrf52_promicro_diy_tcxo          | NRF52 Pro-micro DIY                     | 63       | NRF52_PROMICRO_DIY          | variants/nrf52840/diy/nrf52_promicro_diy_tcxo  | Display:5, Radio:52, Input:2, GPS:7, Power:6                        |
+| pca10059_diy_eink                |                                         |          |                             | variants/nrf52840/Dongle_nRF52840-pca10059-v1  | Display:7, Radio:8, GPS:4, Power:5                                  |
+| r1-neo                           | muzi R1 Neo                             | 101      | MUZI_R1_NEO                 | variants/nrf52840/r1-neo                       | Display:1, Radio:8, GPS:4, Power:5                                  |
+| rak2560                          | RAK WisMesh Repeater                    | 22       | WISMESH_HUB                 | variants/nrf52840/rak2560                      | Display:6, Radio:8, GPS:2, Power:5                                  |
+| rak3401-1watt                    | RAK3401 1W                              | 117      | RAK3401                     | variants/nrf52840/rak3401_1watt                | Display:6, Radio:12, GPS:3, Power:7                                 |
+| rak3401-lr2021                   | RAK3401 LR2021                          | 117      | RAK3401                     | variants/nrf52840/rak3401_lr2021               | Display:6, Radio:7, GPS:3, Power:5                                  |
+| rak4631                          | RAK WisBlock 4631                       | 9        | RAK4631                     | variants/nrf52840/rak4631                      | Display:6, Radio:8, GPS:4, Power:7, Connectivity/Other:1            |
+| rak4631_dbg                      |                                         |          |                             | variants/nrf52840/rak4631                      | Display:6, Radio:8, GPS:4, Power:7, Connectivity/Other:1            |
+| rak4631_eink                     |                                         |          |                             | variants/nrf52840/rak4631_epaper               | Display:6, Radio:8, GPS:4, Power:5                                  |
+| rak4631_eink_onrxtx              |                                         |          |                             | variants/nrf52840/rak4631_epaper_onrxtx        | Display:6, Radio:8, Power:1                                         |
+| rak4631_eth_gw                   | RAK WisBlock 4631                       | 9        | RAK4631                     | variants/nrf52840/rak4631_eth_gw               | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1            |
+| rak4631_eth_gw_dbg               |                                         |          |                             | variants/nrf52840/rak4631_eth_gw               | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1            |
+| rak4631_nomadstar_meteor_pro     | NomadStar Meteor Pro                    | 96       | NOMADSTAR_METEOR_PRO        | variants/nrf52840/rak4631_nomadstar_meteor_pro | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1            |
+| rak4631_nomadstar_meteor_pro_dbg |                                         |          |                             | variants/nrf52840/rak4631_nomadstar_meteor_pro | Display:6, Radio:8, GPS:3, Power:5, Connectivity/Other:1            |
+| rak_wismesh_dongle               | RAK WisMesh Dongle                      | 9        | RAK4631                     | variants/nrf52840/rak_wismesh_dongle           | Display:7, Radio:8, GPS:1, Power:1, Connectivity/Other:1            |
+| rak_wismesh_pocket               | RAK WisMesh Pocket V3                   |          |                             | variants/nrf52840/rak4631                      | Display:6, Radio:8, GPS:4, Power:7, Connectivity/Other:1            |
+| rak_wismesh_pod                  | RAK WisMesh Pod                         |          |                             | variants/nrf52840/rak_wismeshtag               | Display:7, Radio:8, GPS:4, Power:7                                  |
+| rak_wismesh_repeater_mini        | RAK WisMesh Repeater Mini V2            |          |                             | variants/nrf52840/rak4631                      | Display:6, Radio:8, GPS:4, Power:7, Connectivity/Other:1            |
+| rak_wismesh_repeater_mini_hp     | RAK WisMesh Repeater Mini V2 HP         |          |                             | variants/nrf52840/rak3401_1watt                | Display:6, Radio:12, GPS:3, Power:7                                 |
+| rak_wismesh_sensorhub            | RAK WisMesh Repeater (SensorHub uplink) | 22       | WISMESH_HUB                 | variants/nrf52840/rak2560                      | Display:6, Radio:8, GPS:2, Power:5                                  |
+| rak_wismeshtag                   | RAK WisMesh Tag                         | 105      | WISMESH_TAG                 | variants/nrf52840/rak_wismeshtag               | Display:7, Radio:8, GPS:4, Power:7                                  |
+| rak_wismeshtap                   | RAK WisMesh Tap                         | 84       | WISMESH_TAP                 | variants/nrf52840/rak_wismeshtap               | Display:21, Radio:8, GPS:3, Power:7, Connectivity/Other:1           |
+| seeed_mesh_tracker_X1            | Seeed SenseCAP Mesh-Tracker-X1          | 128      | MESH_TRACKER_X1             | variants/nrf52840/seeed_mesh_tracker_X1        | Display:1, Radio:7, Input:1, GPS:12, Power:5                        |
+| seeed_solar_node                 | Seeed SenseCAP Solar Node               | 95       | SEEED_SOLAR_NODE            | variants/nrf52840/seeed_solar_node             | Radio:9, Input:2, GPS:8, Power:3                                    |
+| seeed_wio_tracker_L1             | Seeed Wio Tracker L1                    | 99       | SEEED_WIO_TRACKER_L1        | variants/nrf52840/seeed_wio_tracker_L1         | Display:2, Radio:9, Input:1, GPS:7, Power:5                         |
+| seeed_wio_tracker_L1_Pro_1W      | Seeed Wio Tracker L1 Pro 1W             | 144      | SEEED_WIO_TRACKER_L1_PRO_1W | variants/nrf52840/seeed_wio_tracker_L1_Pro_1W  | Display:4, Radio:13, Input:1, GPS:7, Power:5                        |
+| seeed_wio_tracker_L1_eink        | Seeed Wio Tracker L1 E-Ink              | 100      | SEEED_WIO_TRACKER_L1_EINK   | variants/nrf52840/seeed_wio_tracker_L1_eink    | Display:7, Radio:9, Input:1, GPS:7, Power:5                         |
+| seeed_wio_tracker_L1_eink-inkhud |                                         |          |                             | variants/nrf52840/seeed_wio_tracker_L1_eink    | Display:7, Radio:9, Input:1, GPS:7, Power:5                         |
+| seeed_xiao_nrf52840_kit          | Seeed Xiao NRF52840 Kit                 | 88       | XIAO_NRF52_KIT              | variants/nrf52840/seeed_xiao_nrf52840_kit      | Radio:19, Input:2, GPS:9, Power:6                                   |
+| seeed_xiao_nrf52840_kit_i2c      |                                         |          |                             | variants/nrf52840/seeed_xiao_nrf52840_kit      | Radio:19, Input:2, GPS:9, Power:6                                   |
+| t-echo                           | LILYGO T-Echo                           | 7        | T_ECHO                      | variants/nrf52840/t-echo                       | Display:7, Radio:8, GPS:7, Power:6, Connectivity/Other:1            |
+| t-echo-card                      |                                         |          |                             | variants/nrf52840/t-echo-card                  | Display:6, Radio:9, GPS:13, Power:8, Connectivity/Other:1           |
+| t-echo-inkhud                    |                                         |          |                             | variants/nrf52840/t-echo                       | Display:7, Radio:8, GPS:7, Power:6, Connectivity/Other:1            |
+| t-echo-lite                      | LILYGO T-Echo Lite                      | 109      | T_ECHO_LITE                 | variants/nrf52840/t-echo-lite                  | Display:6, Radio:9, GPS:10, Power:8                                 |
+| t-echo-plus                      | LILYGO T-Echo Plus                      | 33       | T_ECHO_PLUS                 | variants/nrf52840/t-echo-plus                  | Display:8, Radio:8, GPS:7, Power:6                                  |
+| t-impulse-plus                   | LILYGO T-Impulse Plus                   | 135      | T_IMPULSE_PLUS              | variants/nrf52840/t-impulse-plus               | Display:4, Radio:8, GPS:8, Power:3                                  |
+| thinknode_m1                     | ThinkNode M1                            | 89       | THINKNODE_M1                | variants/nrf52840/ELECROW-ThinkNode-M1         | Display:7, Radio:8, Input:1, GPS:8, Power:8                         |
+| thinknode_m1-inkhud              |                                         |          |                             | variants/nrf52840/ELECROW-ThinkNode-M1         | Display:7, Radio:8, Input:1, GPS:8, Power:8                         |
+| thinknode_m3                     | Elecrow ThinkNode M3                    | 115      | THINKNODE_M3                | variants/nrf52840/ELECROW-ThinkNode-M3         | Radio:1, Input:2, GPS:9, Power:7, Connectivity/Other:1              |
+| thinknode_m4                     |                                         |          |                             | variants/nrf52840/ELECROW-ThinkNode-M4         | Radio:8, GPS:12, Power:7                                            |
+| thinknode_m6                     | ThinkNode M6                            | 120      | THINKNODE_M6                | variants/nrf52840/ELECROW-ThinkNode-M6         | Radio:7, GPS:9, Power:9, Connectivity/Other:1                       |
+| thinknode_m8                     | Elecrow ThinkNode M8                    | 130      | THINKNODE_M8                | variants/nrf52840/ELECROW-ThinkNode-M8         | Display:6, Radio:12, Input:3, GPS:10, Power:7, Connectivity/Other:1 |
+| tracker-t1000-e                  | Seeed SenseCAP T1000-E                  | 71       | TRACKER_T1000_E             | variants/nrf52840/tracker-t1000-e              | Display:1, Radio:8, Input:1, GPS:13, Power:5                        |
+| wio-sdk-wm1110                   |                                         |          |                             | variants/nrf52840/wio-sdk-wm1110               | Radio:8, Input:1                                                    |
+| wio-t1000-s                      |                                         |          |                             | variants/nrf52840/wio-t1000-s                  | Radio:8, Input:1, GPS:12, Power:4                                   |
+| wio-tracker-wm1110               | Seeed Wio WM1110 Tracker                | 21       | WIO_WM1110                  | variants/nrf52840/wio-tracker-wm1110           | Radio:8, Input:1, GPS:3                                             |
 
 ### nrf54l15
 
-| Environment | Display Name       | HW Model | HW Slug     | Variant Dir                  | Common Categories |
-| ----------- | ------------------ | -------- | ----------- | ---------------------------- | ----------------- |
-| nrf54l15dk  | Nordic nRF54L15-DK | 255      | NRF54L15_DK | variants/nrf54l15/nrf54l15dk | Radio:8           |
+| Environment          | Display Name                  | HW Model | HW Slug              | Variant Dir                     | Common Categories |
+| -------------------- | ----------------------------- | -------- | -------------------- | ------------------------------- | ----------------- |
+| nrf54l15dk           | Nordic nRF54L15-DK            | 255      | NRF54L15_DK          | variants/nrf54l15/nrf54l15dk    | Radio:8, Power:1  |
+| xiao_nrf54l15        | Seeed XIAO nRF54L15           | 255      | XIAO_NRF54L15        | variants/nrf54l15/xiao_nrf54l15 | Radio:9, Power:1  |
+| xiao_nrf54l15_lr2021 | Seeed XIAO nRF54L15 LoRa Plus | 255      | XIAO_NRF54L15_LR2021 | variants/nrf54l15/xiao_nrf54l15 | Radio:9, Power:1  |
 
 ### rp2040
 
@@ -443,7 +485,7 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | picow                | Raspberry Pi Pico W | 47       | RPI_PICO    | variants/rp2040/rpipicow             | Radio:16, Input:1, Power:4, Connectivity/Other:1 |
 | rak11310             | RAK WisBlock 11310  | 26       | RAK11310    | variants/rp2040/rak11310             | Radio:17, Input:1, Power:3, Connectivity/Other:1 |
 | rp2040-lora          | RP2040 LoRa         | 30       | RP2040_LORA | variants/rp2040/rp2040-lora          | Radio:18, Input:1, Power:1                       |
-| seeed_xiao_rp2040    |                     |          |             | variants/rp2040/seeed_xiao_rp2040    | Radio:11, Power:3                                |
+| seeed_xiao_rp2040    |                     |          |             | variants/rp2040/seeed_xiao_rp2040    | Radio:11, Power:2                                |
 | senselora_rp2040     |                     |          |             | variants/rp2040/senselora_rp2040     | Display:1, Radio:9, Input:1, Power:1             |
 
 ### rp2350
@@ -453,17 +495,18 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 | pico2             |              |          |         | variants/rp2350/rpipico2            | Radio:16, Input:1, Power:4                       |
 | pico2_w5500_e22   |              |          |         | variants/rp2350/diy/pico2_w5500_e22 | Radio:17, GPS:5, Power:3, Connectivity/Other:1   |
 | pico2w            |              |          |         | variants/rp2350/rpipico2w           | Radio:16, Input:1, Power:4, Connectivity/Other:1 |
-| seeed_xiao_rp2350 |              |          |         | variants/rp2350/seeed_xiao_rp2350   | Radio:11, Power:3                                |
+| seeed_xiao_rp2350 |              |          |         | variants/rp2350/seeed_xiao_rp2350   | Radio:11, Power:2                                |
 
 ### stm32
 
 | Environment     | Display Name | HW Model | HW Slug | Variant Dir                    | Common Categories                           |
 | --------------- | ------------ | -------- | ------- | ------------------------------ | ------------------------------------------- |
-| CDEBYTE_E77-MBL |              |          |         | variants/stm32/CDEBYTE_E77-MBL | Display:1                                   |
+| CDEBYTE_E77-MBL |              |          |         | variants/stm32/CDEBYTE_E77-MBL | Display:1, Radio:1                          |
 | milesight_gs301 |              |          |         | variants/stm32/milesight_gs301 | Display:1, Radio:1, Input:1                 |
-| rak3172         |              |          |         | variants/stm32/rak3172         | Display:1, Power:2                          |
+| nucleo_wl55jc   |              |          |         | variants/stm32/nucleo_wl55jc   | Display:1, Radio:1, Input:3, Power:2        |
+| rak3172         |              |          |         | variants/stm32/rak3172         | Display:1, Radio:1, Power:2                 |
 | russell         |              |          |         | variants/stm32/russell         | Display:1, Radio:1, Input:1, GPS:4, Power:2 |
-| wio-e5          |              |          |         | variants/stm32/wio-e5          | Display:1                                   |
+| wio-e5          |              |          |         | variants/stm32/wio-e5          | Display:1, Radio:1                          |
 
 ## Representative Board Examples
 
@@ -515,38 +558,48 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
   - `I2C_SDA` = `SDA`
   - `I2C_SCL` = `SCL`
 
-### esp32-c6: `m5stack-unitc6l`
+### esp32-c6: `heltec-rcc6`
 
-- Variant directory: `variants/esp32c6/m5stack_unitc6l`
-- `custom_meshtastic_hw_model`: `111`
-- `custom_meshtastic_hw_model_slug`: `M5STACK_C6L`
+- Variant directory: `variants/esp32c6/heltec_rcc6`
+- `custom_meshtastic_hw_model`: `143`
+- `custom_meshtastic_hw_model_slug`: `HELTEC_RCC6`
 - `custom_meshtastic_architecture`: `esp32-c6`
 - `custom_meshtastic_actively_supported`: `true`
 - `custom_meshtastic_support_level`: `1`
-- `custom_meshtastic_display_name`: `M5Stack Unit C6L`
-- `custom_meshtastic_images`: `m5_c6l.svg`
-- `custom_meshtastic_tags`: `M5Stack`
+- `custom_meshtastic_display_name`: `Heltec RCC6`
+- `custom_meshtastic_images`: `heltec-rcc6.svg`
+- `custom_meshtastic_tags`: `Heltec`
+- `custom_meshtastic_partition_scheme`: `16MB`
+- Input examples:
+  - `BUTTON_PIN` = `9`
 - Radio examples:
   - `USE_SX1262` = `1`
-  - `LORA_MISO` = `22`
-  - `LORA_SCK` = `20`
-  - `LORA_MOSI` = `21`
+  - `LORA_SCK` = `21`
+  - `LORA_MISO` = `20`
+  - `LORA_MOSI` = `22`
   - `LORA_CS` = `23`
-  - `LORA_RESET` = `RADIOLIB_NC`
-  - `LORA_DIO1` = `7`
-  - `LORA_BUSY` = `19`
+  - `LORA_RESET` = `8`
+  - `LORA_DIO1` = `19`
+  - `LORA_BUSY` = `10`
 - GPS examples:
-  - `HAS_GPS` = `1`
-  - `GPS_RX_PIN` = `4`
-  - `GPS_TX_PIN` = `5`
+  - `HAS_GPS` = `0`
 - Display examples:
-  - `OLED_TINY` = `1`
-  - `SCREEN_TRANSITION_FRAMERATE` = `10`
+  - `HAS_SCREEN` = `1`
+  - `USE_TFTDISPLAY` = `1`
+  - `TFT_NV3001B` = `1`
+  - `TFT_NV3001B_DETECT` = `1`
+  - `TFT_SCL` = `4`
+  - `TFT_SDA` = `15`
+  - `TFT_CS` = `18`
+  - `TFT_RS` = `3`
 - I2C/SPI examples:
-  - `I2C_SDA` = `10`
-  - `I2C_SCL` = `8`
-- Connectivity/Other examples:
-  - `HAS_NEOPIXEL` = `1`
+  - `SPI_FREQUENCY` = `4000000`
+- Power examples:
+  - `BATTERY_PIN` = `6`
+  - `ADC_CHANNEL` = `ADC_CHANNEL_6`
+  - `ADC_CTRL` = `5`
+  - `ADC_CTRL_ENABLED` = `HIGH`
+  - `ADC_MULTIPLIER` = `4.95f`
 
 ### esp32-s3: `CDEBYTE_EoRa-Hub`
 
@@ -638,7 +691,6 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
   - `PIN_SPI_SCK` = `(32 + 15)`
   - `PIN_SPI_NSS` = `(32 + 13)`
 - Power examples:
-  - `BATTERY_PIN` = `-1`
   - `ADC_MULTIPLIER` = `(2.0F)`
   - `ADC_RESOLUTION` = `14`
   - `BATTERY_SENSE_RESOLUTION_BITS` = `12`
@@ -654,15 +706,24 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 - `custom_meshtastic_display_name`: `Nordic nRF54L15-DK`
 - Radio examples:
   - `USE_SX1262` = `1`
-  - `SX126X_CS` = `37`
-  - `SX126X_DIO1` = `38`
-  - `SX126X_BUSY` = `35`
-  - `SX126X_RESET` = `32`
-  - `SX126X_ANT_SW` = `39`
+  - `SX126X_CS` = `69`
+  - `SX126X_DIO1` = `70`
+  - `SX126X_BUSY` = `67`
+  - `SX126X_RESET` = `64`
+  - `SX126X_ANT_SW` = `71`
   - `SX126X_DIO2_AS_RF_SWITCH` = `1`
   - `SX126X_DIO3_TCXO_VOLTAGE` = `1.8f`
 - I2C/SPI examples:
+  - `SPI_INTERFACES_COUNT` = `1`
+  - `PIN_SPI_MISO` = `68`
+  - `PIN_SPI_MOSI` = `66`
+  - `PIN_SPI_SCK` = `65`
   - `WIRE_INTERFACES_COUNT` = `1`
+  - `WIRE_TWIM` = `NRF_TWIM30`
+  - `WIRE_TWIS` = `NRF_TWIS30`
+  - `WIRE_IRQN` = `SERIAL30_IRQn`
+- Power examples:
+  - `ADC_RESOLUTION` = `14`
 
 ### rp2040: `catsniffer`
 
@@ -704,6 +765,8 @@ The following `custom_meshtastic_*` metadata keys are already used across board 
 ### stm32: `CDEBYTE_E77-MBL`
 
 - Variant directory: `variants/stm32/CDEBYTE_E77-MBL`
+- Radio examples:
+  - `SX126X_DIO3_TCXO_VOLTAGE` = `1.7`
 - Display examples:
   - `USE_STM32WLx` = `1`
 

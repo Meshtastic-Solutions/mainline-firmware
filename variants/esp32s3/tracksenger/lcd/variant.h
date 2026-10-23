@@ -11,6 +11,7 @@
 // #define USE_SSD1306
 
 // Default SPI1 will be mapped to the display
+#define HAS_SPI_TFT 1
 #define ST7789_SDA 42
 #define ST7789_SCK 41
 #define ST7789_CS 38
@@ -104,12 +105,6 @@
 
 #define INPUTBROKER_MATRIX_TYPE 1
 
-#define KEYS_COLS                                                                                                                \
-    {                                                                                                                            \
-        44, 45, 46, 4, 5, 6                                                                                                      \
-    }
-#define KEYS_ROWS                                                                                                                \
-    {                                                                                                                            \
-        26, 37, 17, 16, 15, 7                                                                                                    \
-    }
+#define KEYS_COLS {44, 45, 46, 4, 5, 6}
+#define KEYS_ROWS {26, 37, 17, 16, 15, 7}
 // #end keyboard

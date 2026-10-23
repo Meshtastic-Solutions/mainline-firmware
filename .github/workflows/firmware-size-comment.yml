@@ -16,7 +16,7 @@ jobs:
       github.event.workflow_run.conclusion != 'cancelled' &&
       github.repository == 'meshtastic/firmware'
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Download size report
         id: download
@@ -30,7 +30,7 @@ jobs:
 
       - name: Post or update PR comment
         if: steps.download.outcome == 'success'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');

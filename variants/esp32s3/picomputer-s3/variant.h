@@ -27,6 +27,7 @@
 #define LORA_DIO2 RADIOLIB_NC
 
 // Default SPI1 will be mapped to the display
+#define HAS_SPI_TFT 1
 #define ST7789_SDA 4
 #define ST7789_SCK 3
 #define ST7789_CS 6
@@ -53,11 +54,5 @@
 
 #define INPUTBROKER_MATRIX_TYPE 1
 
-#define KEYS_COLS                                                                                                                \
-    {                                                                                                                            \
-        44, 47, 17, 15, 13, 41                                                                                                   \
-    }
-#define KEYS_ROWS                                                                                                                \
-    {                                                                                                                            \
-        12, 16, 42, 18, 14, 7                                                                                                    \
-    }
+#define KEYS_COLS {44, 47, 17, 15, 13, 41}
+#define KEYS_ROWS {12, 16, 42, 18, 14, 7}

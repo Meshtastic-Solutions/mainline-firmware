@@ -306,7 +306,29 @@ template <typename T> bool LR20x0Interface<T>::isChannelActive()
     int16_t result;
 
     setStandby();
-    result = lora.scanChannel(cfg);
+    // RadioLib's blocking scanChannel() spins forever if the CAD IRQ never reaches the DIO pin,
+    // freezing the whole cooperative scheduler. Run the scan with a bounded wait instead.
+    result = lora.startChannelScan(cfg);
+    if (result != RADIOLIB_ERR_NONE) {
+        LOG_WARN("LR20x0 startChannelScan %s%d", radioLibErr, result);
+        setStandby();
+        return false;
+    }
+    uint32_t cadStart = millis();
+    bool irqSeen = true;
+    while (!digitalRead(module.getIrq())) {
+        if (millis() - cadStart > 500) {
+            irqSeen = false;
+            break;
+        }
+        yield();
+    }
+    if (!irqSeen) {
+        LOG_WARN("LR20x0 CAD IRQ never fired — check the IRQ pin / LR2021_IRQ_DIO_NUM mapping");
+        setStandby();
+        return false;
+    }
+    result = lora.getChannelScanResult();
     if (result == RADIOLIB_LORA_DETECTED)
         return true;
 

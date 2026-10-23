@@ -127,6 +127,9 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          # TEMPORARY: surface the hidden SDK error while diagnosing the
+          # zero-turn auth failure. Revert once the cause is known.
+          show_full_output: true
           prompt: |
             /board-bringup /tmp/board-packet
 
